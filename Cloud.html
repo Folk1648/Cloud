@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปเนื้อหาเครือข่ายคอมพิวเตอร์ (Computer Networks) เชื่อมโยง OSI 7 Layers</title>
+    <!-- โหลด Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- โหลด Font Awesome สำหรับไอคอน -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- โหลดฟอนต์ Sarabun และ Prompt จาก Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Sarabun', 'sans-serif'],
+                        heading: ['Prompt', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Prompt', sans-serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .osi-btn-active {
+            border-color: #0284c7;
+            background-color: #f0f9ff;
+            box-shadow: 0 4px 12px -2px rgba(2, 132, 199, 0.15);
+            transform: translateX(4px);
+        }
+        .highlight-pulse {
+            animation: highlightCard 2s ease-out;
+        }
+        @keyframes highlightCard {
+            0% { box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.5); border-color: #0ea5e9; }
+            100% { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); }
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between py-3 sm:h-16 gap-2">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-600 to-indigo-700 flex items-center justify-center shadow-sm shrink-0">
+                        <i class="fa-solid fa-network-wired text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-sm sm:text-base font-bold text-slate-900 leading-tight">
+                            สรุปเนื้อหาเครือข่ายคอมพิวเตอร์ (Computer Networks)
+                        </h1>
+                        <p class="text-xs text-slate-500">เชื่อมโยงทั้ง 11 บทเรียนเข้ากับแบบจำลอง OSI 7 Layers</p>
+                    </div>
+                </div>
+
+                <!-- Quick Anchor Navigation -->
+                <nav class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 sm:pb-0">
+                    <a href="#section-osi" class="px-3 py-1.5 rounded-lg text-xs font-heading font-medium text-slate-700 hover:text-sky-700 hover:bg-sky-50 border border-slate-200 transition whitespace-nowrap">
+                        <i class="fa-solid fa-layer-group text-sky-600 mr-1"></i>OSI 7 Layers
+                    </a>
+                    <a href="#section-flow" class="px-3 py-1.5 rounded-lg text-xs font-heading font-medium text-slate-700 hover:text-indigo-700 hover:bg-indigo-50 border border-slate-200 transition whitespace-nowrap">
+                        <i class="fa-solid fa-arrows-left-right text-indigo-600 mr-1"></i>ภาพรวมการส่งข้อมูล
+                    </a>
+                    <a href="#section-chapters" class="px-3 py-1.5 rounded-lg text-xs font-heading font-medium text-white bg-sky-600 hover:bg-sky-700 shadow-sm transition whitespace-nowrap">
+                        <i class="fa-solid fa-book-open mr-1"></i>คลังเนื้อหา 11 บทเรียน
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero / Objective Banner -->
+    <div class="bg-gradient-to-b from-sky-50/90 to-slate-50 border-b border-slate-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            <div class="bg-white border border-sky-200/80 rounded-2xl p-5 sm:p-6 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="space-y-1.5">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-heading font-semibold bg-sky-100 text-sky-800">
+                            <i class="fa-solid fa-bullseye"></i> เป้าหมายการเรียนรู้
+                        </span>
+                        <h2 class="text-lg sm:text-xl font-bold text-slate-900">
+                            สรุปและเรียบเรียงเนื้อหาทั้ง 11 บทเรียนให้เชื่อมโยงกันอย่างเป็นระบบ
+                        </h2>
+                        <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+                            จัดหมวดหมู่เนื้อหาตามบทเรียน (บทที่ 1–11) 
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 shrink-0 text-xs font-heading">
+                        <div class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                            <div class="font-bold text-lg text-sky-700">7</div>
+                            <div class="text-slate-500">ชั้นสื่อสาร OSI</div>
+                        </div>
+                        <div class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                            <div class="font-bold text-lg text-indigo-700">11</div>
+                            <div class="text-slate-500">บทเรียนหลัก</div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-12">
+
+        <!-- ===================================================================== -->
+        <!-- SECTION 1: INTERACTIVE OSI LAYER MAPPING -->
+        <!-- ===================================================================== -->
+        <section id="section-osi" class="scroll-mt-20 space-y-5">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+                <div>
+                    <span class="text-xs font-heading font-semibold uppercase tracking-wider text-sky-600">ส่วนที่ 1 : โครงสร้างชั้นสื่อสารมาตรฐาน</span>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mt-0.5">สำรวจชั้นสื่อสาร OSI 7 Layers (Interactive OSI Layer Mapping)</h2>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-500">คลิกเลือกแต่ละชั้นสื่อสารเพื่อดูหน้าที่และบทเรียนที่เกี่ยวข้องโดยตรง</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <!-- Left: 7 Layers Stack -->
+                <div class="lg:col-span-5 space-y-2">
+                    <div class="flex items-center justify-between text-xs font-heading font-medium text-slate-500 px-2 pb-1">
+                        <span>ลำดับชั้นสื่อสาร (บนลงล่าง)</span>
+                        <span>หน่วยข้อมูล (PDU)</span>
+                    </div>
+                    <div id="osi-stack-list" class="space-y-2">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+
+                <!-- Right: Selected Layer Details -->
+                <div class="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 shadow-sm sticky top-24">
+                    <div id="osi-detail-card">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- SECTION 2: END-TO-END DATA FLOW OVERVIEW -->
+        <!-- ===================================================================== -->
+        <section id="section-flow" class="scroll-mt-20 space-y-5">
+            <div>
+                <span class="text-xs font-heading font-semibold uppercase tracking-wider text-indigo-600">ส่วนที่ 2 : ภาพรวมการทำงานตั้งแต่ต้นทางถึงปลายทาง</span>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mt-0.5">การเดินทางของข้อมูล (End-to-End Flow & Encapsulation)</h2>
+                <p class="text-sm text-slate-600 mt-1">
+                    แผนภาพสรุปกระบวนการห่อหุ้มข้อมูล (Encapsulation) จากเครื่องผู้ส่ง ผ่านสื่อกลาง ไปยังการแกะข้อมูล (Decapsulation) ที่เครื่องผู้รับ
+                </p>
+            </div>
+
+            <!-- Static Visual Overview Grid -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
+                <div class="grid grid-cols-1 lg:grid-cols-11 gap-5 items-stretch">
+                    
+                    <!-- SENDER CARD -->
+                    <div class="lg:col-span-4 bg-sky-50/60 border border-sky-200 rounded-xl p-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between pb-3 mb-3 border-b border-sky-200/80">
+                                <div class="flex items-center gap-2 font-heading font-bold text-sky-900">
+                                    <i class="fa-solid fa-laptop text-sky-600"></i>
+                                    <span>1. ฝั่งผู้ส่ง (Sender)</span>
+                                </div>
+                                <span class="px-2 py-0.5 rounded bg-sky-100 text-sky-800 text-xs font-heading font-medium">Encapsulation</span>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-3">
+                                ข้อมูลไหลจาก <strong>บนลงล่าง (L7 ➔ L1)</strong> โดยแต่ละชั้นจะเติมส่วนหัว (Header) และส่วนท้าย (Trailer) เพื่อกำกับการส่ง
+                            </p>
+                            <div class="space-y-1.5 text-xs">
+                                <div class="p-2 rounded-lg bg-white border border-sky-100 flex justify-between items-center">
+                                    <span class="font-semibold text-sky-800">L7–L5: App / Pres / Sess</span>
+                                    <span class="font-mono text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded">Data</span>
+                                </div>
+                                <div class="text-center text-sky-400 text-[10px]"><i class="fa-solid fa-arrow-down"></i> เติม Port (TCP/UDP Header)</div>
+                                <div class="p-2 rounded-lg bg-white border border-violet-100 flex justify-between items-center">
+                                    <span class="font-semibold text-violet-800">L4: Transport</span>
+                                    <span class="font-mono text-violet-700 bg-violet-50 px-1.5 py-0.5 rounded">Segment</span>
+                                </div>
+                                <div class="text-center text-sky-400 text-[10px]"><i class="fa-solid fa-arrow-down"></i> เติม IP Address (IP Header)</div>
+                                <div class="p-2 rounded-lg bg-white border border-indigo-100 flex justify-between items-center">
+                                    <span class="font-semibold text-indigo-800">L3: Network</span>
+                                    <span class="font-mono text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded">Packet</span>
+                                </div>
+                                <div class="text-center text-sky-400 text-[10px]"><i class="fa-solid fa-arrow-down"></i> เติม MAC Address + FCS</div>
+                                <div class="p-2 rounded-lg bg-white border border-emerald-100 flex justify-between items-center">
+                                    <span class="font-semibold text-emerald-800">L2: Data Link</span>
+                                    <span class="font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">Frame</span>
+                                </div>
+                                <div class="text-center text-sky-400 text-[10px]"><i class="fa-solid fa-arrow-down"></i> แปลงเป็นสัญญาณไฟฟ้า/แสง</div>
+                                <div class="p-2 rounded-lg bg-white border border-amber-100 flex justify-between items-center">
+                                    <span class="font-semibold text-amber-800">L1: Physical</span>
+                                    <span class="font-mono text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">Bits (0, 1)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TRANSMISSION MEDIA & INTERMEDIATE DEVICES -->
+                    <div class="lg:col-span-3 flex flex-col justify-center items-center bg-slate-50 border border-slate-200 rounded-xl p-4 text-center space-y-4">
+                        <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xl shadow-inner">
+                            <i class="fa-solid fa-tower-broadcast"></i>
+                        </div>
+                        <div>
+                            <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-heading font-semibold">2. สื่อกลางและอุปกรณ์เครือข่าย</span>
+                            <h3 class="font-bold text-slate-900 text-sm mt-2">การส่งผ่านข้อมูลข้ามเครือข่าย</h3>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                                บิตสัญญาณเดินทางผ่าน <strong>สาย UTP, Fiber Optic หรือคลื่นไร้สาย Wi-Fi</strong> (บทที่ 4, 5, 6, 8)
+                            </p>
+                        </div>
+                        <div class="w-full space-y-2 text-left text-xs bg-white p-3 rounded-lg border border-slate-200">
+                            <div class="font-heading font-semibold text-slate-700 border-b border-slate-100 pb-1">อุปกรณ์ระหว่างทาง (บทที่ 3):</div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-600">• Hub / Repeater</span>
+                                <span class="text-[11px] font-mono text-amber-700 bg-amber-50 px-1.5 rounded">ทำงานถึง L1</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-600">• Switch / Access Point</span>
+                                <span class="text-[11px] font-mono text-emerald-700 bg-emerald-50 px-1.5 rounded">ทำงานถึง L2</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-600">• Router (หาเส้นทาง IP)</span>
+                                <span class="text-[11px] font-mono text-indigo-700 bg-indigo-50 px-1.5 rounded">ทำงานถึง L3</span>
+                            </div>
+                        </div>
+                        <div class="hidden lg:flex items-center gap-2 text-xs font-heading font-semibold text-slate-400">
+                            <span>Sender</span>
+                            <i class="fa-solid fa-arrow-right-long text-sky-500 text-base"></i>
+                            <i class="fa-solid fa-arrow-right-long text-emerald-500 text-base"></i>
+                            <span>Receiver</span>
+                        </div>
+                    </div>
+
+                    <!-- RECEIVER CARD -->
+                    <div class="lg:col-span-4 bg-emerald-50/60 border border-emerald-200 rounded-xl p-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between pb-3 mb-3 border-b border-emerald-200/80">
+                                <div class="flex items-center gap-2 font-heading font-bold text-emerald-900">
+                                    <i class="fa-solid fa-server text-emerald-600"></i>
+                                    <span>3. ฝั่งผู้รับ (Receiver)</span>
+                                </div>
+                                <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-xs font-heading font-medium">Decapsulation</span>
+                            </div>
+                            <p class="text-xs text-slate-600 mb-3">
+                                ข้อมูลไหลจาก <strong>ล่างขึ้นบน (L1 ➔ L7)</strong> โดยแต่ละชั้นจะตรวจสอบความถูกต้องและแกะส่วนหัว (Header) ออกตามลำดับ
+                            </p>
+                            <div class="space-y-1.5 text-xs">
+                                <div class="p-2 rounded-lg bg-white border border-sky-100 flex justify-between items-center">
+                                    <span class="font-semibold text-sky-800">L7–L5: App / Pres / Sess</span>
+                                    <span class="font-mono text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded">แสดงผล Data</span>
+                                </div>
+                                <div class="text-center text-emerald-500 text-[10px]"><i class="fa-solid fa-arrow-up"></i> ถอดรหัส &amp; จับคู่ Session</div>
+                                <div class="p-2 rounded-lg bg-white border border-violet-100 flex justify-between items-center">
+                                    <span class="font-semibold text-violet-800">L4: Transport</span>
+                                    <span class="font-mono text-violet-700 bg-violet-50 px-1.5 py-0.5 rounded">เรียงลำดับ &amp; แกะ Port</span>
+                                </div>
+                                <div class="text-center text-emerald-500 text-[10px]"><i class="fa-solid fa-arrow-up"></i> ตรวจสอบ IP &amp; แกะ IP Header</div>
+                                <div class="p-2 rounded-lg bg-white border border-indigo-100 flex justify-between items-center">
+                                    <span class="font-semibold text-indigo-800">L3: Network</span>
+                                    <span class="font-mono text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded">รับ Packet</span>
+                                </div>
+                                <div class="text-center text-emerald-500 text-[10px]"><i class="fa-solid fa-arrow-up"></i> ตรวจ Error (Parity/Checksum)</div>
+                                <div class="p-2 rounded-lg bg-white border border-emerald-100 flex justify-between items-center">
+                                    <span class="font-semibold text-emerald-800">L2: Data Link</span>
+                                    <span class="font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">ตรวจ MAC &amp; แกะ Frame</span>
+                                </div>
+                                <div class="text-center text-emerald-500 text-[10px]"><i class="fa-solid fa-arrow-up"></i> แปลงสัญญาณกลับเป็นบิต</div>
+                                <div class="p-2 rounded-lg bg-white border border-amber-100 flex justify-between items-center">
+                                    <span class="font-semibold text-amber-800">L1: Physical</span>
+                                    <span class="font-mono text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">รับ Bits (0, 1)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- SECTION 3: 11 CHAPTERS KNOWLEDGE REPOSITORY (CHAPTERS 1 - 11) -->
+        <!-- ===================================================================== -->
+        <section id="section-chapters" class="scroll-mt-20 space-y-5">
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-heading font-semibold uppercase tracking-wider text-sky-600">ส่วนที่ 3 : คลังเนื้อหาสรุปทั้ง 11 บทเรียน</span>
+                        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mt-0.5">สรุปเนื้อหาวิชาเครือข่ายคอมพิวเตอร์ (บทที่ 1 – บทที่ 11)</h2>
+                        <p class="text-sm text-slate-600 mt-1">
+                            เรียบเรียงหัวข้อสำคัญครบถ้วนตามสไลด์การสอน 
+                        </p>
+                    </div>
+                    
+                </div>
+
+                <!-- Filter Pills -->
+                <div class="flex flex-wrap items-center gap-2 mt-5 pt-4 border-t border-slate-100">
+                    <span class="text-xs font-heading font-medium text-slate-500 mr-1">กรองตามชั้นสื่อสาร:</span>
+                    <button onclick="setFilter('all', this)" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-heading font-semibold bg-sky-600 text-white shadow-sm transition">
+                        ทั้งหมด (11 บท)
+                    </button>
+                    <button onclick="setFilter('L7-L5', this)" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-heading font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        L5–L7 (Session – App)
+                    </button>
+                    <button onclick="setFilter('L4', this)" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-heading font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        L4 (Transport)
+                    </button>
+                    <button onclick="setFilter('L3', this)" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-heading font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        L3 (Network)
+                    </button>
+                    <button onclick="setFilter('L2', this)" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-heading font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        L2 (Data Link)
+                    </button>
+                    <button onclick="setFilter('L1', this)" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-heading font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        L1 (Physical)
+                    </button>
+                    <button onclick="setFilter('overview', this)" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-heading font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        ภาพรวม &amp; ความปลอดภัย
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chapters List (Organized Cards) -->
+            <div id="chapters-container" class="space-y-5">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+            <div class="font-heading font-medium text-slate-700">
+                สรุปเนื้อหาวิชาเครือข่ายคอมพิวเตอร์ (Computer Networks) — ครอบคลุมบทที่ 1 ถึง บทที่ 11
+            </div>
+            <div>
+                จัดหมวดหมู่เชื่อมโยงแบบจำลอง OSI 7 Layers เพื่อความเข้าใจตั้งแต่ต้นทางถึงปลายทาง
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===================================================================== -->
+    <!-- JAVASCRIPT DATA & LOGIC -->
+    <!-- ===================================================================== -->
+    <script>
+        // 1. ข้อมูล OSI 7 Layers
+        const osiLayers = [
+            {
+                layer: 7,
+                name: "Application Layer",
+                thaiName: "ชั้นสื่อสารแอปพลิเคชัน",
+                pdu: "Data (ข้อมูล)",
+                badgeBg: "bg-sky-100 text-sky-800 border-sky-200",
+                iconBg: "bg-sky-600",
+                summary: "เป็นชั้นที่อยู่ใกล้ชิดกับผู้ใช้งานมากที่สุด ทำหน้าที่เป็นตัวกลางเชื่อมต่อระหว่างซอฟต์แวร์ประยุกต์ของผู้ใช้กับบริการบนเครือข่าย",
+                functions: [
+                    "ให้บริการโปรโตคอลสำหรับแอปพลิเคชันของผู้ใช้ เช่น เว็บเบราว์เซอร์ อีเมล และการโอนย้ายไฟล์",
+                    "กำหนดรูปแบบการร้องขอและการตอบสนองข้อมูลระหว่าง Client และ Server",
+                    "เป็นจุดเริ่มต้นการส่งข้อมูล (Sender) และจุดสิ้นสุดการรับข้อมูล (Receiver)"
+                ],
+                protocols: ["HTTP / HTTPS", "DNS", "DHCP", "FTP", "SMTP / POP3 / IMAP", "SSH / Telnet"],
+                devices: ["คอมพิวเตอร์ (PC)", "สมาร์ทโฟน", "Application Server", "Next-Gen Firewall"],
+                relatedChapters: [
+                    { id: 10, label: "บทที่ 10: โปรโตคอลบนชั้นทรานสปอร์ตและแอปพลิเคชัน" },
+                    { id: 2, label: "บทที่ 2: แบบจำลองเครือข่าย (OSI & TCP/IP)" },
+                    { id: 11, label: "บทที่ 11: ความปลอดภัยบนเครือข่าย" }
+                ]
+            },
+            {
+                layer: 6,
+                name: "Presentation Layer",
+                thaiName: "ชั้นสื่อสารการนำเสนอข้อมูล",
+                pdu: "Data (ข้อมูล)",
+                badgeBg: "bg-cyan-100 text-cyan-800 border-cyan-200",
+                iconBg: "bg-cyan-600",
+                summary: "ทำหน้าที่เสมือน 'นักแปลภาษา' แปลงรูปแบบข้อมูลให้ระบบต้นทางและปลายทางเข้าใจตรงกัน รวมถึงการเข้ารหัสลับและการบีบอัดข้อมูล",
+                functions: [
+                    "การแปลรูปแบบข้อมูล (Translation) เช่น รหัสตัวอักษร ASCII, Unicode (UTF-8)",
+                    "การเข้ารหัสและถอดรหัสข้อมูล (Encryption / Decryption) เช่น SSL/TLS เพื่อความปลอดภัย",
+                    "การบีบอัดข้อมูล (Compression) เพื่อลดขนาดข้อมูลก่อนส่งผ่านเครือข่าย"
+                ],
+                protocols: ["SSL / TLS", "ASCII / Unicode", "JPEG / PNG / GIF", "MIME"],
+                devices: ["Gateway", "เครื่องคอมพิวเตอร์ต้นทางและปลายทาง"],
+                relatedChapters: [
+                    { id: 2, label: "บทที่ 2: แบบจำลองเครือข่าย (หน้าที่ชั้น Presentation)" },
+                    { id: 11, label: "บทที่ 11: ความปลอดภัยบนเครือข่าย (การเข้ารหัส Cryptography)" }
+                ]
+            },
+            {
+                layer: 5,
+                name: "Session Layer",
+                thaiName: "ชั้นสื่อสารเซสชัน",
+                pdu: "Data (ข้อมูล)",
+                badgeBg: "bg-blue-100 text-blue-800 border-blue-200",
+                iconBg: "bg-blue-600",
+                summary: "ทำหน้าที่สร้าง ควบคุมดูแล และยุติ 'ช่องทางการสื่อสาร (Session)' ระหว่างแอปพลิเคชันต้นทางและปลายทาง",
+                functions: [
+                    "การเปิด ดูแลรักษา และปิดเซสชันการสื่อสาร (Session Establishment, Maintenance, Termination)",
+                    "ควบคุมจังหวะการโต้ตอบ (Dialog Control) ว่าเป็นแบบ Half-Duplex หรือ Full-Duplex",
+                    "ใส่จุดซิงโครไนซ์ (Synchronization / Checkpoints) เพื่อกู้คืนการส่งข้อมูลขนาดใหญ่หากการเชื่อมต่อสะดุด"
+                ],
+                protocols: ["NetBIOS", "RPC (Remote Procedure Call)", "PPTP", "SQL Session"],
+                devices: ["Gateway", "Server"],
+                relatedChapters: [
+                    { id: 2, label: "บทที่ 2: แบบจำลองเครือข่าย (หน้าที่ชั้น Session)" },
+                    { id: 1, label: "บทที่ 1: เครือข่ายคอมพิวเตอร์และการสื่อสารข้อมูล (ทิศทางการสื่อสาร)" }
+                ]
+            },
+            {
+                layer: 4,
+                name: "Transport Layer",
+                thaiName: "ชั้นสื่อสารทรานสปอร์ต",
+                pdu: "Segment (TCP) / Datagram (UDP)",
+                badgeBg: "bg-violet-100 text-violet-800 border-violet-200",
+                iconBg: "bg-violet-600",
+                summary: "ทำหน้าที่ส่งมอบข้อมูลแบบ Process-to-Process (ระบุหมายเลข Port) แบ่งข้อมูลเป็นส่วนย่อย และควบคุมความน่าเชื่อถือในการส่งถึงปลายทาง",
+                functions: [
+                    "ระบุหมายเลขพอร์ต (Port Addressing) เพื่อส่งข้อมูลเข้าสู่โปรแกรมปลายทางได้ถูกต้อง",
+                    "แบ่งส่วนข้อมูลขนาดใหญ่ (Segmentation) และประกอบกลับ (Reassembly) ตามลำดับที่ถูกต้อง",
+                    "เลือกรูปแบบการเชื่อมต่อ: แบบเชื่อถือได้ (Connection-oriented: TCP) หรือแบบรวดเร็ว (Connectionless: UDP)",
+                    "ควบคุมการไหลของข้อมูลและความผิดพลาดแบบ End-to-End"
+                ],
+                protocols: ["TCP", "UDP", "SCTP"],
+                devices: ["Firewall", "Load Balancer", "Gateway"],
+                relatedChapters: [
+                    { id: 10, label: "บทที่ 10: โปรโตคอลบนชั้นทรานสปอร์ตและแอปพลิเคชัน (TCP, UDP, SCTP)" },
+                    { id: 7, label: "บทที่ 7: การตรวจจับข้อผิดพลาดและการควบคุม (Flow & Error Control)" },
+                    { id: 2, label: "บทที่ 2: แบบจำลองเครือข่าย" }
+                ]
+            },
+            {
+                layer: 3,
+                name: "Network Layer",
+                thaiName: "ชั้นสื่อสารเครือข่าย",
+                pdu: "Packet (แพ็กเก็ต)",
+                badgeBg: "bg-indigo-100 text-indigo-800 border-indigo-200",
+                iconBg: "bg-indigo-600",
+                summary: "ทำหน้าที่กำหนดที่อยู่เชิงตรรกะ (Logical Address หรือ IP Address) และค้นหาเส้นทางที่ดีที่สุด (Routing) เพื่อส่งแพ็กเก็ตข้ามเครือข่าย",
+                functions: [
+                    "กำหนดหมายเลข IP Address (IPv4 / IPv6) เพื่อระบุตัวตนของโฮสต์ต้นทางและปลายทางข้ามเครือข่าย",
+                    "การจัดเส้นทาง (Routing) เพื่อส่งแพ็กเก็ตผ่าน Router ไปยังเครือข่ายปลายทาง",
+                    "การแบ่งเครือข่ายย่อย (Subnetting) และการแปลงที่อยู่เครือข่าย (NAT)"
+                ],
+                protocols: ["IPv4", "IPv6", "ICMP", "NAT", "ARP", "Routing Protocols"],
+                devices: ["Router (เราเตอร์)", "Layer 3 Switch"],
+                relatedChapters: [
+                    { id: 9, label: "บทที่ 9: โปรโตคอล IP และการจัดสรรไอพีแอดเดรส" },
+                    { id: 3, label: "บทที่ 3: องค์ประกอบของเครือข่ายและโทโพโลยี (Packet Switching)" }
+                ]
+            },
+            {
+                layer: 2,
+                name: "Data Link Layer",
+                thaiName: "ชั้นสื่อสารดาต้าลิงค์",
+                pdu: "Frame (เฟรม)",
+                badgeBg: "bg-emerald-100 text-emerald-800 border-emerald-200",
+                iconBg: "bg-emerald-600",
+                summary: "ทำหน้าที่จัดรูปแบบข้อมูลเป็น 'เฟรม (Frame)' อ้างอิงที่อยู่ทางกายภาพ (MAC Address) แบบ Node-to-Node พร้อมกลไกตรวจจับและควบคุมข้อผิดพลาด",
+                functions: [
+                    "การจัดเฟรมข้อมูล (Framing) และระบุที่อยู่ทางกายภาพ (Physical / MAC Address)",
+                    "การตรวจจับข้อผิดพลาด (Error Detection: Parity Check, Checksum)",
+                    "การควบคุมการไหลของข้อมูล (Flow Control: Stop-and-Wait, Sliding Window)",
+                    "การควบคุมข้อผิดพลาดและการส่งซ้ำ (Error Control: Stop-and-Wait ARQ, Go-Back-N, Selective-Reject)",
+                    "การควบคุมการเข้าถึงสื่อกลาง (MAC: CSMA/CD ใน LAN และ CSMA/CA ใน Wi-Fi)"
+                ],
+                protocols: ["Ethernet (IEEE 802.3)", "Wi-Fi (IEEE 802.11)", "PPP", "ARP"],
+                devices: ["Switch (สวิตช์)", "Bridge", "Wireless Access Point (AP)", "การ์ดแลน (NIC)"],
+                relatedChapters: [
+                    { id: 7, label: "บทที่ 7: การตรวจจับข้อผิดพลาดและการควบคุม (Parity, Checksum, ARQ)" },
+                    { id: 8, label: "บทที่ 8: เครือข่ายแลนไร้สาย (IEEE 802.11, CSMA/CA)" }
+                ]
+            },
+            {
+                layer: 1,
+                name: "Physical Layer",
+                thaiName: "ชั้นสื่อสารฟิสิคัล",
+                pdu: "Bits (บิต 0 และ 1)",
+                badgeBg: "bg-amber-100 text-amber-800 border-amber-200",
+                iconBg: "bg-amber-600",
+                summary: "ชั้นล่างสุดที่ทำหน้าที่แปลงบิตข้อมูล (0 และ 1) ให้เป็นสัญญาณไฟฟ้า แสง หรือคลื่นวิทยุ เพื่อส่งผ่านสื่อกลางทางกายภาพ",
+                functions: [
+                    "กำหนดคุณสมบัติทางกายภาพของสายสัญญาณ หัวเชื่อมต่อ และระดับแรงดันไฟฟ้า",
+                    "การเข้ารหัสสัญญาณ (Line Coding) และการมอดูเลต (Modulation) แปลงข้อมูลเป็นสัญญาณ",
+                    "กำหนดรูปแบบการส่งข้อมูลดิจิตอล (Parallel vs Serial) และพอร์ตเชื่อมต่อ (RS-232, USB, FireWire)",
+                    "ส่งสัญญาณผ่านสื่อกลางแบบมีสาย (UTP, Coaxial, Fiber Optic) และไร้สาย"
+                ],
+                protocols: ["RS-232", "USB", "FireWire", "IEEE 802.3 (Physical)", "IEEE 802.11 (Radio)"],
+                devices: ["สาย UTP / STP / Coaxial / Fiber Optic", "Hub", "Repeater", "Modem"],
+                relatedChapters: [
+                    { id: 4, label: "บทที่ 4: พื้นฐานข้อมูลและสัญญาณ" },
+                    { id: 5, label: "บทที่ 5: การส่งผ่านข้อมูลดิจิตอลและการอินเตอร์เฟส" },
+                    { id: 6, label: "บทที่ 6: สื่อกลางในการส่งข้อมูล" },
+                    { id: 8, label: "บทที่ 8: เครือข่ายแลนไร้สาย (คลื่นความถี่ 2.4 / 5 GHz)" }
+                ]
+            }
+        ];
+
+        // 2. ข้อมูลสรุปทั้ง 11 บทเรียน (บทที่ 1 - 11 ครบทุกหัวข้อและเนื้อหาเจาะลึก)
+        const chaptersData = [
+            {
+                id: 1,
+                code: "บทที่ 1",
+                title: "เครือข่ายคอมพิวเตอร์และการสื่อสารข้อมูล",
+                tags: ["overview"],
+                osiBadge: "เชื่อมโยงภาพรวมทั้งหมด (Overview)",
+                badgeClass: "bg-slate-100 text-slate-700 border-slate-300",
+                overview: "ความหมายและส่วนประกอบของการสื่อสารข้อมูล คุณสมบัติพื้นฐาน 3 ประการ แนวคิดและประโยชน์ของการสร้างเครือข่ายคอมพิวเตอร์ รวมถึงเกณฑ์วัดประสิทธิภาพเครือข่าย",
+                sections: [
+                    {
+                        heading: "ความหมายและส่วนประกอบของการสื่อสารข้อมูล 5 ส่วน",
+                        items: [
+                            "การสื่อสารข้อมูล (Data Communication): กระบวนการถ่ายโอนข้อมูลจากแหล่งกำเนิดข่าวสาร ผ่านสื่อกลาง เพื่อส่งไปยังจุดหมายปลายทางที่ต้องการ",
+                            "ข้อมูล/ข่าวสาร (Message): สารสนเทศที่ต้องการส่ง เช่น ข้อความ ตัวเลข รูปภาพ เสียง หรือวิดีโอ",
+                            "ผู้ส่ง/แหล่งกำเนิดข่าวสาร (Sender/Source): อุปกรณ์หรือเครื่องคอมพิวเตอร์ฝ่ายส่ง ทำหน้าที่เตรียมและส่งข้อมูล",
+                            "ผู้รับ/จุดหมายปลายทาง (Receiver/Destination): อุปกรณ์หรือเครื่องคอมพิวเตอร์ฝ่ายรับที่เป็นปลายทางของการสื่อสาร",
+                            "สื่อกลางส่งข้อมูล (Transmission Medium): เส้นทางเชิงกายภาพหรือช่องทางการสื่อสารที่ใช้ลำเลียงข่าวสาร",
+                            "โปรโตคอล (Protocol): กลุ่มกฎเกณฑ์และข้อปฏิบัติที่เป็นข้อตกลงร่วมกันในการสื่อสารระหว่างผู้ส่งและผู้รับ"
+                        ]
+                    },
+                    {
+                        heading: "คุณสมบัติพื้นฐานของการสื่อสารข้อมูล 3 ประการ",
+                        items: [
+                            "การส่งข้อมูล (Delivery): ระบบต้องส่งข้อมูลไปยังจุดหมายปลายทางได้อย่างถูกต้อง",
+                            "ความถูกต้องแน่นอน (Accuracy): ระบบต้องส่งข้อมูลได้อย่างถูกต้องและเที่ยงตรง ไม่ผิดเพี้ยน",
+                            "ระยะเวลา (Timeliness): ระบบต้องส่งข้อมูลถึงปลายทางภายในระยะเวลาที่เหมาะสม เพื่อให้นำไปใช้ประโยชน์ได้ทันท่วงที"
+                        ]
+                    },
+                    {
+                        heading: "แนวคิดและประโยชน์ของเครือข่ายคอมพิวเตอร์",
+                        items: [
+                            "แนวคิดหลัก: เชื่อมต่อคอมพิวเตอร์และอุปกรณ์เข้าด้วยกันผ่านสื่อกลาง เพื่อแก้ปัญหาการส่งเอกสารกระดาษและระยะทาง ให้แลกเปลี่ยนข้อมูลได้รวดเร็วและมีประสิทธิภาพ",
+                            "การแลกเปลี่ยนข้อมูลอย่างมีประสิทธิภาพ: ใช้งานเว็บไซต์และอีเมลภายในองค์กร (Intranet) ลดการใช้กระดาษ และแจ้งข่าวสารถึงผู้รับหลายคนพร้อมกันได้",
+                            "การแชร์ฮาร์ดแวร์และซอฟต์แวร์: ใช้อุปกรณ์พ่วงต่อร่วมกัน (เช่น เครื่องพิมพ์) และแจกจ่ายซอฟต์แวร์จากเซิร์ฟเวอร์ส่วนกลางให้เป็นมาตรฐานเดียวกัน",
+                            "การประหยัดต้นทุน: ลดค่าใช้จ่ายในการซื้ออุปกรณ์ให้ครบทุกเครื่อง และลดค่าลิขสิทธิ์ซอฟต์แวร์แบบติดตั้งบนเครือข่าย",
+                            "การจัดการและควบคุมจากศูนย์กลาง: เพิ่มความสะดวกในการสื่อสาร (แชต, ประชุมทางไกล) ข้อมูลทันสมัย และกำหนดสิทธิ์การเข้าถึงด้วยบัญชีผู้ใช้"
+                        ]
+                    },
+                    {
+                        heading: "เกณฑ์วัดประสิทธิภาพของเครือข่าย (3 ด้านหลัก)",
+                        items: [
+                            "สมรรถนะ (Performance): ประเมินจากเวลาที่ใช้ส่งข้อมูลและเวลาตอบสนอง (ขึ้นอยู่กับจำนวนผู้ใช้, ชนิดสื่อกลาง, ฮาร์ดแวร์ และซอฟต์แวร์)",
+                            "ความน่าเชื่อถือ (Reliability): วัดจากความถี่ของความล้มเหลว ระยะเวลาในการกู้คืนระบบ และความคงทนต่อข้อผิดพลาด",
+                            "ความปลอดภัย (Security): การป้องกันข้อมูลจากการเข้าถึงโดยผู้ไม่มีสิทธิ์ และการป้องกันไวรัสคอมพิวเตอร์"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 2,
+                code: "บทที่ 2",
+                title: "แบบจำลองเครือข่าย (Network Model)",
+                tags: ["overview", "L7-L5", "L4", "L3", "L2", "L1"],
+                osiBadge: "เชื่อมโยงทุกชั้น (L1–L7 & TCP/IP)",
+                badgeClass: "bg-sky-100 text-sky-800 border-sky-200",
+                overview: "ความเป็นมาและแนวคิดของแบบจำลอง OSI 7 ชั้น จัดกลุ่มและเจาะลึกภาระหน้าที่ของแต่ละชั้นสื่อสาร กระบวนการ Encapsulation/Decapsulation และแบบจำลองอินเทอร์เน็ต (TCP/IP Model)",
+                sections: [
+                    {
+                        heading: "แนวคิดพื้นฐานของแบบจำลอง OSI (ISO 1984)",
+                        items: [
+                            "ระบบเปิด (Open System): อนุญาตให้ระบบที่มีสถาปัตยกรรมต่างกันสื่อสารกันได้ (OSI เป็นเพียงทฤษฎีแบบจำลองแนวความคิด ไม่ใช่โปรโตคอล)",
+                            "เหตุผลในการแบ่งชั้นสื่อสาร 5 ข้อ: ลดความซับซ้อน, กำหนดบทบาทหน้าที่ชัดเจน, สอดคล้องมาตรฐานสากล, ป้องกันผลกระทบข้ามชั้นเมื่อมีการเปลี่ยนแปลง และมีจำนวนชั้นเหมาะสม",
+                            "Peer-to-Peer Processes: การสื่อสารบนชั้นเดียวกันระหว่างต้นทาง-ปลายทางผ่านโปรโตคอล (ตั้งแต่ชั้น Data Link ขึ้นไป) ส่วน Service คือชุดคำสั่งให้บริการชั้นที่เหนือกว่า",
+                            "การห่อหุ้มข้อมูล: Encapsulation (ฝั่งส่งเติม Header ทีละชั้น และ Trailer ที่ชั้น Data Link) ส่วน Decapsulation (ฝั่งรับถอด Header/Trailer ของชั้นตนเองออก)"
+                        ]
+                    },
+                    {
+                        heading: "การจัดกลุ่ม 3 ระดับ และหน้าที่ชั้น L1 – L3 (Network Support)",
+                        items: [
+                            "จัดองค์ประกอบ 3 กลุ่ม: Network Support Layers (L1–L3), Transport Layer (L4) และ User Support Layers (L5–L7)",
+                            "Layer 1 Physical (ส่งกระแสบิต): ดูแลลักษณะทางกายภาพของอินเตอร์เฟซ/สื่อกลาง, การเข้ารหัสแทนค่าบิต, Data Rate, Synchronization, ทิศทาง (Simplex/Half/Full-Duplex), Line Configuration และ Physical Topology",
+                            "Layer 2 Data Link (ส่งแบบ Hop-to-Hop): จัดหน่วยข้อมูลเป็น Frame และดูแล 5 หน้าที่คือ Framing, Physical Address (MAC), Flow Control, Access Control และ Error Control (เพิ่มรหัสในส่วนหาง Trailer)",
+                            "Layer 3 Network (ส่งแบบ Source-to-Destination): จัดส่ง Packet ข้ามเครือข่ายต่างชนิดกันผ่าน Router โดยใช้ Logical Addressing (IP) และเลือกเส้นทาง (Routing)"
+                        ]
+                    },
+                    {
+                        heading: "หน้าที่ชั้น L4 (Transport) และชั้น L5 – L7 (User Support)",
+                        items: [
+                            "Layer 4 Transport (ส่งแบบ Process-to-Process): ระบุ Port Address (Service-point address), แบ่งและรวม Segment (ใส่ Sequence Number), ควบคุมการเชื่อมต่อ (TCP/UDP), Flow Control และ Error Control ระดับโปรเซส",
+                            "Layer 5 Session: ควบคุมไดอะล็อก (Dialog Control แบบ Half/Full-Duplex) และการซิงโครไนซ์ (Synchronization) แทรกจุดตรวจสอบ (Checkpoint) เพื่อกู้คืนเมื่อเซสชั่นล้มเหลว",
+                            "Layer 6 Presentation: แปลงรหัสข้อมูลให้ตรงกัน (Translation เช่น ASCII, Unicode, EBCDIC), เข้ารหัสและถอดรหัส (Encryption/Decryption) และบีบอัดข้อมูล (Compression)",
+                            "Layer 7 Application: ติดต่อกับผู้ใช้ผ่าน User Interface เพื่อให้บริการเครือข่าย เช่น การจัดการไฟล์ระยะไกล (FTAM) และบริการอีเมล (Mail Service)"
+                        ]
+                    },
+                    {
+                        heading: "แบบจำลองอินเทอร์เน็ต (TCP/IP Model) และโปรโตคอลประจำชั้น",
+                        items: [
+                            "โครงสร้าง TCP/IP: แบบดั้งเดิมมี 4 ชั้น (Host-to-Network, Internet, Transport, Application) และแบบ 5 ชั้น (แยก Physical กับ Data Link ออกจากกัน) โดยชั้น Application รวมหน้าที่ L5–L7 ของ OSI",
+                            "ชั้น Physical & Data Link: TCP/IP ไม่กำหนดโปรโตคอลตายตัว รองรับเครือข่ายหลากหลาย เช่น Ethernet, FDDI, ATM, Frame Relay",
+                            "ชั้น Network (Internet): โปรโตคอลหลักคือ IP (Host-to-Host แบบ Packet Switching) ร่วมกับ ICMP (รายงานข้อผิดพลาด), IGMP (กลุ่ม Multicast), ARP (แปลง IP เป็น MAC) และ RARP (แปลง MAC เป็น IP)",
+                            "ชั้น Transport: TCP (Connection-oriented สร้าง/ลำเลียง/ยุติการเชื่อมต่อ รับประกันความถูกต้อง), UDP (Connectionless ส่งทันทีเน้นเร็ว) และ SCTP (สนับสนุนงานด้านเสียง)",
+                            "ชั้น Application: รวมโปรโตคอลบริการผู้ใช้ เช่น HTTP (เว็บเพจ), FTP (ถ่ายโอนไฟล์), SMTP (ส่งอีเมล), IMAP (รับ/ดาวน์โหลดอีเมล), DNS, SNMP, NFS, RPC และ TFTP"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 3,
+                code: "บทที่ 3",
+                title: "องค์ประกอบของเครือข่ายและรูปแบบการเชื่อมต่อเครือข่าย",
+                tags: ["L1", "L2", "L3"],
+                osiBadge: "เชื่อมโยง L1–L3 & ประเภทเครือข่าย",
+                badgeClass: "bg-indigo-100 text-indigo-800 border-indigo-200",
+                overview: "องค์ประกอบพื้นฐาน 6 ส่วนของเครือข่าย อุปกรณ์เชื่อมต่อตามชั้นสื่อสาร การเชื่อมต่อและโทโพโลยี 4 รูปแบบ การจำแนกประเภทเครือข่าย 3 เกณฑ์ และเทคนิคการสวิตชิ่ง",
+                sections: [
+                    {
+                        heading: "องค์ประกอบพื้นฐานของเครือข่าย 6 ส่วน",
+                        items: [
+                            "Server & Client: เซิร์ฟเวอร์สมรรถนะสูงทำงาน 24 ชม. บริการทรัพยากร (เช่น File/Print Server) ส่วน Client เป็นเครื่องผู้ใช้ทั่วไป",
+                            "NIC (Network Interface Card): แผงวงจรแปลงข้อมูลเป็นสัญญาณบนชั้น Physical (บัส PCI 32 บิต, รุ่นเก่า ISA 16 บิต ความเร็ว 10/100/1000 Mbps)",
+                            "สายเคเบิล (Network Cables): สาย UTP ราคาถูกส่งได้ไกลสุด 100 เมตร ส่วนสายไฟเบอร์ออปติกส่งได้ไกลเป็นกิโลเมตรโดยไม่ต้องทวนสัญญาณ",
+                            "ระบบปฏิบัติการเครือข่าย (NOS): จัดการสื่อสารและการเข้าใช้ทรัพยากรบนเครือข่าย เช่น Windows Server 2003, NetWare 6.5 และ Linux"
+                        ]
+                    },
+                    {
+                        heading: "อุปกรณ์เชื่อมต่อเครือข่าย (Connecting Devices)",
+                        items: [
+                            "Hub & Repeater (Layer 1): ทวนและปรับแต่งสัญญาณ (Regenerate) กระจายทุกพอร์ตและแชร์แบนด์วิธ (อยู่บน Collision Domain เดียวกัน) แบ่งเป็น Active Hub และ Passive Hub (เช่น Patch Panel ไม่ใช้ไฟ)",
+                            "Bridge & Switch (Layer 2): อ่าน MAC Address เพื่อส่งเฉพาะพอร์ตปลายทาง ช่วยแบ่งแยก Collision Domain ลดความคับคั่ง โดย Switch ให้แบนด์วิธเต็มทุกพอร์ต",
+                            "Router (Layer 3): เชื่อมโยงเครือข่ายต่างวง (LAN/WAN) อ่านที่อยู่ปลายทางและใช้ Routing Table เลือกเส้นทางที่ดีที่สุด",
+                            "Gateway (ทุกชั้น OSI): เชื่อมต่อเครือข่ายที่ต่างแพลตฟอร์มทั้งฮาร์ดแวร์และซอฟต์แวร์เข้าด้วยกัน เช่น พีซีกับเมนเฟรม"
+                        ]
+                    },
+                    {
+                        heading: "รูปแบบการเชื่อมต่อและโทโพโลยี 4 รูปแบบ",
+                        items: [
+                            "การเชื่อมต่อพื้นฐาน (Link): Point-to-Point (จองช่องทางระหว่าง 2 อุปกรณ์) และ Multi-Point (แชร์สายร่วมกัน ประหยัดสายแต่อาจชนกัน)",
+                            "Bus Topology: ใช้สายแกนหลัก (Backbone) เส้นเดียว ติดตั้งง่ายประหยัดสาย แต่หากสายหลักขาดเครือข่ายจะล่มทั้งหมดและหาจุดเสียยาก",
+                            "Star Topology: เชื่อมผ่านศูนย์กลาง (Hub/Switch) ทนทานเมื่อสายลูกข่ายขาดและดูแลง่าย แต่เปลืองสายและขึ้นอยู่กับตัวกลาง",
+                            "Ring Topology: ต่อวนเป็นวงแหวน ส่งข้อมูลผ่าน Token (Token Passing) ทุกโหนดมีสิทธิ์เท่าเทียมและทวนสัญญาณในตัว แต่หากสายขาดจะล่มทั้งวง",
+                            "Mesh Topology: ต่อถึงกันทุกโหนดแบบจุดต่อจุด ใช้สายจำนวน (N² - N)/2 เส้น ได้แบนด์วิธเต็ม ปลอดภัยและสำรองเส้นทางสูงสุด แต่เปลืองสายมากที่สุด"
+                        ]
+                    },
+                    {
+                        heading: "การจำแนกประเภทเครือข่าย 3 เกณฑ์ และสวิตชิ่ง",
+                        items: [
+                            "ตามหน้าที่การทำงาน: Peer-to-Peer (Workgroup สิทธิ์เท่ากัน ไม่มีแอดมิน เหมาะกับ ≤ 10 คน) และ Client/Server (จัดการและรักษาความปลอดภัยจากศูนย์กลาง รองรับผู้ใช้จำนวนมาก)",
+                            "ตามระดับความปลอดภัย: Intranet (ใช้ภายในองค์กร ป้องกันด้วย Firewall), Internet (เครือข่ายสาธารณะจากโครงการ ARPANET เชื่อมผ่าน ISP) และ Extranet (เชื่อมระหว่างองค์กรแบบควบคุมสิทธิ์)",
+                            "ตามขนาดทางกายภาพ: LAN (ท้องถิ่น ≤ 1 กม.), MAN (ระดับเมืองใช้ไฟเบอร์และวงจรสำรอง Redundant Circuits รูปแบบวงแหวน) และ WAN (ระดับประเทศ/ข้ามทวีป ประกอบด้วยหลาย Subnet)",
+                            "เทคนิคการสวิตชิ่ง 3 ประเภท: Circuit Switching (จองเส้นทางตลอดการสื่อสาร), Message Switching (เก็บและส่งต่อทั้งก้อน หน่วงเวลาสูง) และ Packet Switching (แบ่งเป็นแพ็กเก็ตย่อย แบ่งเป็น Datagram บน L3 และ Virtual-Circuit บน L2)"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 4,
+                code: "บทที่ 4",
+                title: "พื้นฐานข้อมูลและสัญญาณ (Data and Signals)",
+                tags: ["L1"],
+                osiBadge: "เชื่อมโยง L1 (Physical)",
+                badgeClass: "bg-amber-100 text-amber-800 border-amber-200",
+                overview: " ความแตกต่างระหว่างข้อมูลและสัญญาณ คุณสมบัติของสัญญาณแอนะล็อกและดิจิตอล หน่วยวัดความเร็ว Bit Rate กับ Baud Rate การแปลงข้อมูลเป็นสัญญาณทั้ง 4 รูปแบบ ตารางสรุปอุปกรณ์/ระบบที่ใช้งาน ปัจจัยการสูญเสียสัญญาณทั้ง 3 ด้าน (รวมสัญญาณรบกวน 5 ชนิด) และแนวทางป้องกันสัญญาณรบกวน 5 ประการ",
+                sections: [
+                    {
+                        heading: " ข้อมูล (Data) และสัญญาณ (Signal) เบื้องต้น",
+                        items: [
+                            "ความแตกต่างของข้อมูลและสัญญาณ: ข้อมูล (Data) คือสิ่งที่มีความหมายในตัว เช่น ตัวเลข ตัวอักษร ภาพนิ่ง ภาพเคลื่อนไหว ส่วนสัญญาณ (Signal) คือปริมาณที่เปลี่ยนแปลงสัมพันธ์กับเวลาในรูปกระแสไฟฟ้าหรือคลื่นแม่เหล็กไฟฟ้า เพื่อเคลื่อนย้ายข้อมูลบนชั้น Physical",
+                            "สัญญาณแอนะล็อก (Analog Signal): คลื่นต่อเนื่องแกว่งขึ้นลงอย่างราบเรียบ ไม่เปลี่ยนแปลงทันทีทันใด มีค่าแรงดัน (Voltage) ระหว่างต่ำสุด-สูงสุด ถูกรบกวนง่ายและตัดสัญญาณรบกวนออกได้ยาก เมื่อส่งระยะไกลต้องใช้ Amplifier ขยายกำลังสัญญาณ (แต่จะขยายสัญญาณรบกวนเพิ่มขึ้นด้วย)",
+                            "คุณสมบัติของคลื่นซายน์ (Sine Wave): 1) แอมพลิจูด (Amplitude) คือระดับความสูง/แรงดันของคลื่น (หน่วย Volt) 2) ความถี่ (Frequency) คือจำนวนรอบคลื่นใน 1 วินาที (หน่วย Hz) 3) คาบ (Period) คือเวลาที่คลื่นเคลื่อนที่ครบ 1 รอบหรือ 1 Cycle (หน่วยวินาที) 4) เฟส (Phase) คือตำแหน่งองศาของคลื่นที่เปลี่ยนไปตามเวลา (เช่น เลื่อนครึ่งลูกคลื่น = 180 องศา)",
+                            "สัญญาณดิจิตอล (Digital Signal): คลื่นสี่เหลี่ยมไม่ต่อเนื่อง เปลี่ยนค่าแบบก้าวกระโดด (0 และ 1) ต้นทุนต่ำ ทนทานต่อสัญญาณรบกวน และใช้ Repeater ซ่อมแซมรูปคลื่น (Regenerate) ให้เหมือนต้นฉบับได้",
+                            "การวัดสัญญาณดิจิตอลและจำนวนระดับ: 1) Bit Interval คือเวลาที่ใช้ส่งข้อมูล 1 บิต 2) Bit Rate คือจำนวน Bit Interval ต่อวินาที (bps) 3) จำนวนระดับสัญญาณ (L ระดับ) หากมีมากกว่า 2 ระดับ จะส่งข้อมูลได้ระดับละ log2(L) บิต (เช่น 4 ระดับ ส่งได้ 2 บิตต่อช่วง)",
+                            "หน่วยวัดความเร็ว (Bit Rate vs Baud Rate): Bit Rate (Data Rate) คือจำนวนบิตต่อวินาที เปรียบเสมือน 'ผู้โดยสาร' ส่วน Baud Rate คือจำนวนครั้งที่สัญญาณเปลี่ยนแปลงต่อวินาที เปรียบเสมือน 'รถโดยสาร' (ปกติ Baud Rate ≤ Bit Rate และแบนด์วิดท์ของระบบขึ้นอยู่กับ Baud Rate)"
+                        ]
+                    },
+                    {
+                        heading: " การแปลงข้อมูลเป็นสัญญาณ (4 รูปแบบ) และตารางสรุปการใช้งาน",
+                        items: [
+                            "รูปแบบที่ 1 Analog เป็น Analog (Modulation): นำสัญญาณข้อมูลความถี่ต่ำ (เช่น เสียงพูด 300–3400 Hz, เสียงดนตรี 30–20000 Hz) มาผสมกับคลื่นพาหะความถี่สูง (Carrier) และแยกออกที่ปลายทาง (Demodulate) แบ่งเป็น 2 วิธี คือ 1) AM (Amplitude Modulation) เปลี่ยนขนาดคลื่นพาหะตามสัญญาณ 2) FM (Frequency Modulation) เปลี่ยนความถี่คลื่นพาหะตามสัญญาณ (อุปกรณ์: Radio/TV Tuner ใช้ในระบบโทรศัพท์, Cable TV, วิทยุ AM/FM)",
+                            "รูปแบบที่ 2 Digital เป็น Digital (Line Coding): แปลงบิต 0 และ 1 ด้วย Digital Encoder (ใช้ใน LAN และระบบโทรศัพท์ดิจิตอล) มี 4 เทคนิค: 1) NRZ-L แทนค่าตามระดับแรงดัน (1=ต่ำ, 0=สูง) จับจังหวะยากหากบิตซ้ำกันยาว 2) NRZ-I แม่นยำกว่า โดยเปลี่ยนสัญญาณที่จุดเริ่มต้นบิตเมื่อพบบิต 1 เท่านั้น (บิต 0 ไม่เปลี่ยน) 3) Manchester (ใช้ใน Ethernet) เปลี่ยนสัญญาณกลางบิตทั้งเพื่อแทนค่าและซิงโครไนซ์ (ต่ำไปสูง=1, สูงไปต่ำ=0) 4) Differential Manchester เปลี่ยนกลางบิตเพื่อซิงโครไนซ์ และเปลี่ยนต้นบิตเฉพาะเมื่อพบบิต 0",
+                            "รูปแบบที่ 3 Digital เป็น Analog (ใช้ Modem): มอดูเลตบิตเข้ากับคลื่นพาหะเพื่อส่งผ่านสายโทรศัพท์ (แบนด์วิดท์ 4 KHz ส่งได้ 56 Kbps) มี 3 วิธี: 1) ASK (Amplitude-Shift Keying) เปลี่ยนแอมพลิจูดของคลื่นพาหะ 2) FSK (Frequency-Shift Keying) เปลี่ยนความถี่ 3) PSK (Phase-Shift Keying) เปลี่ยนเฟส (ใช้ใน Home Internet Access / Dial-up)",
+                            "รูปแบบที่ 4 Analog เป็น Digital (ใช้ Codec): แปลงข้อมูลแอนะล็อกเป็นดิจิตอลด้วยเทคนิค Voice Digitization / PCM (Pulse Code Modulation) และแปลงกลับได้ ตัวอย่างอุปกรณ์ Codec เช่น ซาวด์การ์ด (Sound Card), สแกนเนอร์ (Scanner) และระบบวิดีโอคอนเฟอเรนซ์ (ใช้ในระบบโทรศัพท์และระบบเสียงดนตรี)"
+                        ]
+                    },
+                    {
+                        heading: " การสูญเสียสัญญาณจากการส่งผ่านข้อมูล (3 ปัจจัยหลัก)",
+                        items: [
+                            "1. การอ่อนกำลังของสัญญาณ (Attenuation): สัญญาณสูญเสียพลังงานเนื่องจากความต้านทานในสายเมื่อส่งระยะไกล ทำให้ความเข้มลดลง แก้ไขโดยใช้ Amplifier ขยายกำลังสัญญาณแอนะล็อก หรือใช้ Repeater ซ่อมแซมสัญญาณดิจิตอลให้คงรูปเดิม",
+                            "2. สัญญาณเคลื่อนที่ด้วยความเร็วต่างกัน (Distortion): เกิดกับสัญญาณผสม (Composite Signal) ที่แต่ละย่านความถี่เดินทางเร็วและถูกลดทอนไม่เท่ากัน ทำให้รูปคลื่นบิดเบี้ยวเมื่อรวมกัน แก้ไขโดยใช้วงจร Equalizer ปรับความเร็วแต่ละความถี่ให้เท่ากัน",
+                            "3.1 เทอร์มัลนอยส์ (Thermal Noise): สัญญาณรบกวนจากความร้อนและการเคลื่อนที่ของอิเล็กตรอนในลวดตัวนำ หลีกเลี่ยงไม่ได้และกระจายทั่วย่านความถี่ (อุณหภูมิสูงยิ่งรบกวนมาก) ป้องกันด้วยตัวกรองสัญญาณ (Filters) หรือ Regenerate",
+                            "3.2 อิมพัลส์นอยส์ (Impulse Noise): คลื่นสัญญาณโด่ง (Spikes) ผิดปกติในเวลาสั้นๆ จากฟ้าแลบ ฟ้าผ่า หรือสายไฟแรงสูงใกล้เคียง ทำให้ข้อมูลดิจิตอลบางส่วนสูญหายกู้คืนไม่ได้ ป้องกันด้วยตัวกรองพิเศษหรืออุปกรณ์ประมวลผลสัญญาณดิจิตอล",
+                            "3.3 ครอสทอล์ก (Crosstalk): การเหนี่ยวนำสนามแม่เหล็กไฟฟ้าข้ามสายที่มัดรวมกันระยะไกล (เช่น ได้ยินเสียงคู่สายอื่นในโทรศัพท์) ป้องกันด้วยการใช้สายสัญญาณที่มีฉนวนหรือชีลด์ (Shield)",
+                            "3.4 เอกโค (Echo): สัญญาณสะท้อนกลับ (Reflection) จากสุดปลายสายโคแอกเชียล ทำให้อุปกรณ์อื่นเข้าใจผิดว่าสายไม่ว่าง ป้องกันด้วยการติดตัวต้านทานปิดปลายสายทั้งสองฝั่งที่เรียกว่า เทอร์มิเนเตอร์ (Terminator)",
+                            "3.5 จิตเตอร์ (Jitter): ความถี่ของสัญญาณเปลี่ยนแปลงต่อเนื่องทำให้เกิดการเลื่อนเฟสตลอดเวลา ป้องกันด้วยการเลือกใช้วงจรอิเล็กทรอนิกส์คุณภาพสูงหรือใช้อุปกรณ์ Repeater"
+                        ]
+                    },
+                    {
+                        heading: " แนวทางการป้องกันและลดสัญญาณรบกวน (5 ข้อ)",
+                        items: [
+                            "ข้อที่ 1 ใช้สายเคเบิลชนิดที่มีฉนวนป้องกัน: เลือกสายที่มีชีลด์ (Shield) เพื่อป้องกันการแทรกแซงของคลื่นแม่เหล็กไฟฟ้าและลดปัญหา Crosstalk",
+                            "ข้อที่ 2 ดูแลคุณภาพสายโทรศัพท์และใช้สายเช่า: ใช้อุปกรณ์กรองสัญญาณ (Filter) ที่จัดหาโดยผู้ให้บริการโครงข่าย หรือเลือกใช้สายเช่าความเร็วสูง (Lease Line) เพื่อลดข้อผิดพลาดในการส่งระยะไกล",
+                            "ข้อที่ 3 เปลี่ยนใช้อุปกรณ์รุ่นใหม่ที่มีประสิทธิภาพสูง: ทดแทนอุปกรณ์เก่าที่เสื่อมสภาพหรือหมดอายุการใช้งาน แม้มีราคาสูงขึ้นแต่ช่วยให้การส่งผ่านข้อมูลแม่นยำและมีคุณภาพดีกว่า",
+                            "ข้อที่ 4 ใช้อุปกรณ์ทวนและขยายสัญญาณให้เหมาะสมกับชนิดข้อมูล: ใช้ Repeater สำหรับขยายระยะทางสัญญาณดิจิตอล และใช้ Amplifier สำหรับสัญญาณแอนะล็อกเพื่อลดความผิดพลาด",
+                            "ข้อที่ 5 ปฏิบัติตามข้อกำหนดและข้อจำกัดของสายสัญญาณแต่ละชนิด: คำนึงถึงขีดจำกัดทางกายภาพของสาย เช่น สาย UTP เชื่อมโยงได้ระยะทางสูงสุดไม่เกิน 100 เมตร และรองรับความเร็วสูงสุดที่ 100 Mbps"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 5,
+                code: "บทที่ 5",
+                title: "การส่งผ่านข้อมูลดิจิตอลและการอินเตอร์เฟส",
+                tags: ["L1"],
+                osiBadge: "เชื่อมโยง L1 (Physical)",
+                badgeClass: "bg-amber-100 text-amber-800 border-amber-200",
+                overview: " กระบวนการและข้อดีของการส่งข้อมูลดิจิตอล การส่งข้อมูลแบบขนาน (Parallel) และอนุกรม (Asynchronous, Synchronous, Isochronous) ทิศทางการสื่อสาร 3 รูปแบบ มาตรฐานการอินเตอร์เฟส DTE-DCE (EIA-232/RS-232), Null Modem รวมถึงอินเตอร์เฟสความเร็วสูง FireWire และ USB",
+                sections: [
+                    {
+                        heading: " พื้นฐานการส่งผ่านข้อมูลดิจิตอล (Digital Transmission)",
+                        items: [
+                            "กระบวนการส่งผ่านข้อมูล 4 ขั้นตอน: 1) เข้ารหัส (Encoding) ข้อมูลเป็นสัญญาณ 2) ส่งสัญญาณผ่านสื่อกลาง (สายสื่อสาร/วิทยุ) 3) ปลายทางถอดรหัส (Decoding) กลับมาเป็นข้อมูลเดิม 4) ปฏิบัติตามข้อกำหนดของสัญญาณแต่ละชนิด โดยต้องควบคุมจังหวะให้สอดคล้องกันเรียกว่า การซิงโครไนซ์ (Synchronize)",
+                            "ข้อดีของการส่งข้อมูลดิจิตอล 6 ข้อ: 1) ข้อผิดพลาดต่ำกว่าแอนะล็อก 2) ทนทานต่อสัญญาณรบกวนดีกว่า 3) จัดการและเข้ารหัสสัญญาณง่าย 4) อัตราความเร็วในการส่งสูง 5) ประสิทธิภาพสูง 6) ความปลอดภัยสูง",
+                            "1. การส่งข้อมูลแบบขนาน (Parallel Transmission): ส่งข้อมูลกลุ่มละ n บิตพร้อมกันใน 1 รอบสัญญาณนาฬิกาผ่านช่องสัญญาณ n เส้น (เช่น พอร์ตเครื่องพิมพ์ LPT) ข้อดีคือรวดเร็วมาก ข้อเสียคือต้นทุนสายสูงและใช้ได้เฉพาะระยะใกล้ (ระยะไกลบิตจะเหลื่อมล้ำกันจนเกิดข้อผิดพลาด)",
+                            "2. การส่งข้อมูลแบบอนุกรม (Serial Transmission): ทยอยส่งทีละบิตตามสายเส้นเดียว ประหยัดสายและส่งได้ทั้งระยะใกล้-ไกล แต่ช้ากว่าแบบขนาน อาศัยรีจีสเตอร์เป็น Buffers พักข้อมูล ใช้วงจร UART แปลงขนานเป็นอนุกรม และวงจร USART แปลงอนุกรมเป็นขนาน",
+                            "รูปแบบการส่งแบบอนุกรม (2.1 Asynchronous): ไม่ใช้สัญญาณนาฬิการ่วมกัน สถานะว่าง (Idle State) มีค่าเป็น 1 เมื่อเริ่มส่งจะส่ง Start Bit (0) ตามด้วยข้อมูล 5-8 บิต และปิดท้ายด้วย Stop Bit (1) ระหว่างไบต์มีช่องว่างเรียกว่า Gap (เช่น คีย์บอร์ด) ข้อดีคือคล่องตัว ต้นทุนต่ำ ข้อเสียคือมีโอเวอร์เฮดสูงจากบิตพิเศษ",
+                            "รูปแบบการส่งแบบอนุกรม (2.2 Synchronous): ส่งข้อมูลต่อเนื่องเป็นกลุ่มใหญ่เรียกว่า เฟรม/บล็อก (มากกว่า 1,000 บิต) ไม่มี Gap, Start Bit หรือ Stop Bit อาศัยสัญญาณนาฬิกาจากฝั่งส่ง (ส่งแยกสายในระยะใกล้ หรือส่งรวมในสัญญาณข้อมูล) ความเร็วสูงมาก เหมาะกับการส่งข้อมูลระหว่างคอมพิวเตอร์",
+                            "รูปแบบการส่งแบบอนุกรม (2.3 Isochronous): มาจากรากศัพท์กรีก iso (เท่ากัน) + chronous (เวลา) ส่งข้อมูลความเร็วสูงในอัตราคงที่และรับประกันเวลาส่ง เพื่อรองรับงานเรียลไทม์ (ออดิโอและวิดีโอ) เช่น บนบัส IEEE 1394 (FireWire)"
+                        ]
+                    },
+                    {
+                        heading: " ทิศทางการส่งข้อมูล (Transmission Mode 3 รูปแบบ)",
+                        items: [
+                            "1. ซิมเพล็กซ์ (Simplex): สื่อสารทิศทางเดียวตายตัว ฝั่งหนึ่งส่งอย่างเดียว อีกฝั่งรับอย่างเดียว เช่น คีย์บอร์ด จอภาพ และการแพร่ภาพโทรทัศน์",
+                            "2. ฮาล์ฟดูเพล็กซ์ (Half-Duplex): สื่อสารสองทิศทางสลับกันบนช่องสัญญาณเดียว ต้องผลัดกันรับและส่งด้วยการสับสวิตช์ เช่น วิทยุสื่อสาร (Walkie-Talkie)",
+                            "3. ฟูลดูเพล็กซ์ (Full-Duplex): สื่อสารสองทิศทางพร้อมกันในเวลาเดียวกัน ทั้งสองฝั่งรับและส่งโต้ตอบได้ทันที เช่น ระบบโทรศัพท์"
+                        ]
+                    },
+                    {
+                        heading: " มาตรฐานการอินเตอร์เฟส DTE - DCE และ EIA-232 (RS-232)",
+                        items: [
+                            "อุปกรณ์ DTE และ DCE: DTE (Data Terminal Equipment) คืออุปกรณ์ต้นทาง/ปลายทาง เช่น คอมพิวเตอร์ เครื่องพิมพ์ ส่วน DCE (Data Circuit-terminating Equipment) คืออุปกรณ์ตัวกลางสำหรับส่งข้อมูลระยะไกล เช่น โมเด็ม",
+                            "ข้อกำหนดสำคัญของมาตรฐานอินเตอร์เฟส 4 ด้าน: 1) ทางกลไก (Mechanical: รูปทรง ขนาด จำนวนเข็มปลั๊ก) 2) ทางไฟฟ้า (Electrical: ระดับแรงดันแทนบิต 0/1 อัตราข้อมูล ระยะทาง) 3) ด้านฟังก์ชันการทำงาน (Functional: หน้าที่สายแต่ละเส้น แบ่งเป็น Signal, Control, Timing, Ground) 4) ด้านขั้นตอนการทำงาน (Procedural: ลำดับขั้นตอนและจังหวะโต้ตอบ)",
+                            "มาตรฐาน EIA-232 (เดิมคือ RS-232): พัฒนาจาก EIA-232C (ปี 1969), EIA-232D (ปี 1987 เพิ่ม test lines 3 เส้น) จนถึง EIA-232F ซึ่งรวมมาตรฐานทางไฟฟ้า (ITU V.28), ทางกลไก (ISO 2110) และด้านฟังก์ชัน/ขั้นตอน (ITU V.24) เข้าด้วยกัน",
+                            "คุณสมบัติทางกลไกและไฟฟ้าของ EIA-232: คอนเน็กเตอร์แบบ DB-25 (25 เข็ม) และ DB-9 (9 เข็ม) โดยพอร์ตพีซี (DTE) ใช้ซ็อกเก็ตตัวเมีย และโมเด็ม (DCE) ใช้ปลั๊กตัวผู้ แรงดันไฟฟ้า -3 ถึง -15V แทนไบนารี 1 และ +3 ถึง +15V แทนไบนารี 0 (ช่วง -3V ถึง +3V เป็น Undefined/Dead Area) ความเร็วต่ำกว่า 20 Kbps ระยะสายไม่เกิน 15 เมตร (50 ฟุต)",
+                            "กลุ่มสัญญาณและหน้าที่ Pin สำคัญ (DB-25 / DB-9): แบ่งเป็น 5 กลุ่ม (A=Ground, B=Data, C=Control, D=Timing, S=Secondary) ได้แก่ AB (Pin 7 / DB9 Pin 5): Signal Ground, BA (Pin 2 / DB9 Pin 3): Transmitted Data (DTE->DCE), BB (Pin 3 / DB9 Pin 2): Received Data (DCE->DTE), CA (Pin 4 / DB9 Pin 7): Request to Send (RTS), CB (Pin 5 / DB9 Pin 8): Clear to Send (CTS), CC (Pin 6 / DB9 Pin 6): DCE Ready, CD (Pin 20 / DB9 Pin 4): Data Terminal Ready (DTE Ready) และ CF (Pin 8 / DB9 Pin 1): Carrier Detect"
+                        ]
+                    },
+                    {
+                        heading: " การเชื่อมต่อแบบนัลโมเด็ม (Null Modem)",
+                        items: [
+                            "หลักการ Null Modem: เชื่อมต่อแบบ DTE-to-DTE โดยตรงระยะใกล้ (ไม่เกิน 50 ฟุต) ไม่ผ่านโมเด็ม (DCE) เนื่องจากส่งสัญญาณดิจิตอลโดยตรงจึงไม่ต้องมอดูเลต คอนเน็กเตอร์ปลายสายทั้งสองด้านเป็นแบบตัวผู้",
+                            "การไขว้สาย (Crossing Connections): ไขว้สายส่ง Pin 2 (TD) ของเครื่องหนึ่งเข้ากับขารับ Pin 3 (RD) ของอีกเครื่อง และไขว้สาย RTS (Pin 4) เข้ากับ CTS (Pin 5) เพื่อจำลองการทำ Handshake ตรวจสอบความพร้อมก่อนส่ง ซอฟต์แวร์ที่ใช้งาน เช่น Laplink, Norton Commander และ FileVan"
+                        ]
+                    },
+                    {
+                        heading: " อินเตอร์เฟสความเร็วสูง (FireWire และ USB)",
+                        items: [
+                            "FireWire (IEEE 1394 / i-Link): พัฒนาโดย Apple ปี 1990 มีหัวแบบ 4-pin และ 6-pin รองรับทั้งแบบ Asynchronous และ Isochronous (รับประกันความเร็วคงที่) สนับสนุน Plug and Play และ Hot Plug (ถอดสายขณะบัสทำงานได้) ความเร็ว IEEE-1394a = 400 Mbps และ IEEE-1394b = 800 Mbps (ขยายได้ถึง 3.2 Gbps) สาย 6-pin ประกอบด้วยสายไฟ Power 2 เส้น (8-40V) คู่ที่ 1 ส่งข้อมูลบวก และคู่ที่ 2 ส่งข้อมูลลบเข้ารหัสแบบ NRZ-L พร้อมสัญญาณนาฬิกา",
+                            "USB (Universal Serial Bus): เชื่อมต่อคอมพิวเตอร์กับอุปกรณ์ต่อพ่วง รองรับ Plug and Play หัวเสียบต่างกันระหว่าง Host End (Type A) และ Device End (Type B, Type Mini) ความเร็ว USB 1.1 = 12 Mbps และ USB 2.0 (High Speed USB) = 480 Mbps",
+                            "โครงสร้างสาย USB 4 เส้น: 1) VBUS ส่งไฟเลี้ยง 5 โวลต์ 2) GND สายกราวด์ 3) D+ ส่งข้อมูลสัญญาณบวก (NRZ-L) 4) D- ส่งข้อมูลสัญญาณลบ (NRZ-L) เพื่อลดการแทรกแซงของสัญญาณรบกวน"
+                        ]
+                    }
+                ]
+            },
+           {
+                id: 6,
+                code: "บทที่ 6",
+                title: "สื่อกลางในการส่งข้อมูล (Transmission Media)",
+                tags: ["L1"],
+                osiBadge: "เชื่อมโยง L1 (Physical)",
+                badgeClass: "bg-amber-100 text-amber-800 border-amber-200",
+                overview: " ปัจจัย 4 ด้านที่ส่งผลต่อความเร็วและระยะทาง สื่อกลางแบบใช้สาย (Twisted-Pair CAT 1–7, STP, Coaxial RG-58/59/8/11, Fiber Optic MMF/SMF) สื่อกลางไร้สาย (การแพร่คลื่น 3 รูปแบบ, RF, Microwave, 3G/4G, Bluetooth, WAP) และหลักเกณฑ์การเลือกสื่อกลาง 5 ด้าน",
+                sections: [
+                    {
+                        heading: " ปัจจัยที่ส่งผลต่อความเร็วและระยะทางบนสื่อกลาง (4 ด้าน)",
+                        items: [
+                            "1. แบนด์วิดธ์ (Bandwidth): ย่านความถี่ของช่องสัญญาณ ช่องสัญญาณยิ่งกว้างยิ่งเคลื่อนย้ายข้อมูลได้ปริมาณมากต่อหนึ่งหน่วยเวลา",
+                            "2. จำนวนโหนดที่เชื่อมต่อ (Number of Receivers): หากเชื่อมต่อแบบหลายจุด (Multipoint) เพื่อแชร์สายร่วมกัน ยิ่งมีโหนดมากความเร็วจะยิ่งลดลงและมีข้อจำกัดด้านระยะทาง",
+                            "3. ความสูญเสียต่อการส่งผ่าน (Transmission Impairments): การอ่อนกำลังของสัญญาณตามระยะทาง โดยสายคู่บิดเกลียวสูญเสียมากสุด รองลงมาคือโคแอกเชียล และสายไฟเบอร์ออปติกสูญเสียน้อยที่สุด (ลากได้ไกลหลายกิโลเมตรโดยไม่ต้องใช้ Repeater)",
+                            "4. การรบกวนของสัญญาณ (Interference): สัญญาณที่คาบเกี่ยวกันในย่านความถี่หรือครอสทอร์ก (Crosstalk) ในสายทองแดง แก้ไขได้ด้วยการใช้สายที่มีฉนวนหรือชีลด์ (Shield) ห่อหุ้ม"
+                        ]
+                    },
+                    {
+                        heading: " สื่อกลางแบบใช้สาย (Conducted Media) — สายคู่บิดเกลียว (Twisted-Pair)",
+                        items: [
+                            "หลักการบิดเกลียว (Twist Ratio): สายทองแดงหุ้มฉนวนถักเป็นเกลียวคู่เพื่อให้สัญญาณรบกวนเหนี่ยวนำเข้าทั้งสองเส้นเท่าๆ กันและหักล้างกันเอง ยิ่งจำนวนรอบเกลียวต่อหน่วยความยาว (Twist Ratio) หนาแน่น ยิ่งลดสัญญาณรบกวนได้ดี (สาย LAN ใช้ 4 คู่ ระยะสูงสุด 100 เมตร)",
+                            "สาย UTP (Unshielded Twisted-Pair) มาตรฐาน ANSI/TIA/EIA 568 (CAT 1–4): 1) CAT 1 ใช้กับระบบโทรศัพท์เสียง/แอนะล็อก 2) CAT 2 วงจรโทรศัพท์ 4 คู่ ใช้ในสาย T-1 (1.544 Mbps) และ ISDN (64 Kbps–1.511 Mbps) 3) CAT 3 บิดอย่างน้อย 3 รอบ/ฟุต ความเร็ว 10 Mbps (Ethernet ยุคเก่า, Token Ring 4 Mbps) 4) CAT 4 ความเร็วสูงสุด 20 Mbps",
+                            "สาย UTP (CAT 5–7) และหัวเชื่อมต่อ: 5) CAT 5 บิด 12 รอบ/ฟุต ความเร็ว 100 Mbps (มาตรฐานขั้นต่ำใน LAN) 6) CAT 5e ลด Crosstalk ความเร็ว 100 Mbps (ถึง 1 Gbps) 7) CAT 6 เพิ่มฉนวนฟอยล์ (Foil) รองรับ 1 Gbps (250 MHz) 8) CAT 6e รองรับ 550 MHz (หลาย Gbps) 9) CAT 7 มีทั้งฟอยล์และชีลด์ใยโลหะถัก รองรับ 1 GHz ใช้หัวเฉพาะต่างจาก RJ-45 (สาย UTP ปกติใช้หัว RJ-45 สำหรับ LAN และ RJ-11 สำหรับโทรศัพท์)",
+                            "สาย STP (Shielded Twisted-Pair): เพิ่มชั้นฟอยล์และเส้นใยโลหะถัก (Shielding) ก่อนหุ้มเปลือกนอก บริษัท IBM พัฒนาสำหรับ Token Ring (Type 1, 2, 6, 7, 9) ภายในมี 2 คู่ ความต้านทาน 150 โอห์ม ป้องกัน Crosstalk ได้ดีมากแต่ราคาสูงกว่าและติดตั้งยากกว่า UTP"
+                        ]
+                    },
+                    {
+                        heading: " สื่อกลางแบบใช้สาย — สายโคแอกเชียล (Coaxial) และไฟเบอร์ออปติก (Optical Fiber)",
+                        items: [
+                            "สายโคแอกเชียล (Coaxial Cable): แกนกลางเป็นลวดทองแดง หุ้มฉนวนพลาสติก ชีลด์โลหะถัก และเปลือกนอก ป้องกันคลื่นแม่เหล็กไฟฟ้าได้ดี แบ่งตามมาตรฐาน Radio Government (RG) ได้แก่ RG-59 (75 Ohm, Cable TV), RG-58 (50 Ohm, Thin Ethernet ขนาด 4 มม.) และ RG-8/RG-11 (50 Ohm, Thick Ethernet ขนาด 10 มม.) ใช้ชุดหัวต่อ BNC (BNC Connector, T-Connector และ Terminator ปิดปลายสาย)",
+                            "โครงสร้างสายไฟเบอร์ออปติก (Optical Fiber): เส้นใยแก้วบริสุทธิ์ขนาดเล็กกว่าเส้นผม (~125 ไมครอน) ประกอบด้วยแกนกลาง (Core) หุ้มด้วยแคลดดิ้ง (Cladding) และเปลือกนอก (แบบ Loose Configuration มีเจลเหลว และแบบ Tight Configuration มีเส้นใยเสริมความแข็งแรง) แปลงสัญญาณไฟฟ้าเป็นพัลส์แสง ใช้หัวต่อ 4 แบบคือ ST, SC, LC และ MT-RJ",
+                            "ประเภทของสายไฟเบอร์ออปติก 2 ชนิด: 1) มัลติโหมด (MMF) ส่งหลายลำแสง ใช้แหล่งกำเนิดแสง LED แบ่งเป็น Step Index (ระยะ 500 ม. แสงแตกกระจาย) และ Grade Index (ระยะ >1 กม. แสงเดินทางกึ่งกลางถึงพร้อมกัน) 2) ซิงเกิลโหมด (SMF) แกนเล็ก 5–10 ไมครอน ส่งลำแสงเดียวด้วย Laser ความเข้มสูง ระยะไกลกว่า 100 กม. ราคาสูง",
+                            "ข้อดี-ข้อเสียของไฟเบอร์ออปติก: ข้อดีคือ ลดทอนต่ำมาก ไม่ถูกรบกวนทางไฟฟ้า แบนด์วิดธ์สูง น้ำหนักเบา ปลอดภัยจากการดักฟังสูง และอายุการใช้งานยาวนาน ข้อเสียคือ เปราะบางห้ามโค้งงอมาก ราคาสูง และต้องใช้ผู้เชี่ยวชาญติดตั้ง"
+                        ]
+                    },
+                    {
+                        heading: "สื่อกลางส่งข้อมูลแบบไร้สาย (Wireless Media)",
+                        items: [
+                            "วิธีการแพร่สัญญาณ 3 รูปแบบ: 1) คลื่นดิน (Ground Wave, <2 MHz) เคลื่อนที่ตามความโค้งเปลือกโลก ระยะทางขึ้นกับกำลังส่ง 2) คลื่นฟ้า (Sky Wave, 2–30 MHz) สะท้อนชั้นบรรยากาศไอโอโนสเฟียร์ (Ionosphere) ส่งได้ไกลแม้กำลังส่งต่ำ 3) คลื่นอวกาศ (Space Wave / Line-of-Sight, >30 MHz) เดินทางเป็นเส้นตรงระดับสายตา ต้องตั้งเสาหันหน้าชนกัน",
+                            "เสาอากาศ 2 ประเภท: 1) แบบแพร่รอบทิศทาง (Omnidirectional) กระจายคลื่นทุกทิศ เช่น คลื่นวิทยุ ทะลุสิ่งกีดขวางได้ดีแต่จำกัดพื้นที่ไม่ได้ 2) แบบกำหนดทิศทาง (Directional) โฟกัสคลื่นเป็นลำตรงแบบจุดต่อจุด เช่น จานไมโครเวฟ",
+                            "เทคโนโลยีไร้สายในสไลด์: 1) คลื่นวิทยุ (RF: 3 KHz–1 GHz) 2) ไมโครเวฟภาคพื้นดิน (1–300 GHz) ส่งไกล ~20 ไมล์ แพ้สภาพอากาศและสิ่งกีดขวาง 3) โทรศัพท์เคลื่อนที่ 3G (ดาวน์โหลด 2.4 Mbps) และ 4G เทคโนโลยี WiMAX (ความเร็ว 75 Mbps ครอบคลุม 48 กม.) 4) บลูทูธ (Bluetooth) เชื่อมต่อระยะใกล้พลังงานต่ำ เครือข่ายไม่เกิน 7 ชิ้นเรียก Piconet (PAN) และหลาย Piconet เชื่อมกันเรียก Scatternet 5) WAP ใช้ภาษา WML แสดงผลบนอุปกรณ์พกพาจอเล็ก"
+                        ]
+                    },
+                    {
+                        heading: " หลักเกณฑ์การพิจารณาเลือกสื่อกลางส่งข้อมูล (5 ปัจจัย)",
+                        items: [
+                            "1. ต้นทุน (Cost): พิจารณาราคาสาย อุปกรณ์สนับสนุน ค่าติดตั้ง และค่าบำรุงรักษาตามอายุการใช้งาน",
+                            "2. ความเร็ว (Speed 2 ด้าน): 1) Data Transmission Speed อัตราการส่งข้อมูล (bps) ขึ้นกับแบนด์วิดธ์และสิ่งรบกวน 2) Propagation Speed ความเร็วการเดินทางของสัญญาณในสื่อกลาง (ไร้สาย/ไฟเบอร์ ≈ 3×10^8 เมตร/วินาที ส่วนสายทองแดงโคแอกเชียล/คู่บิดเกลียว ≈ 2×10^8 เมตร/วินาที)",
+                            "3. ระยะทางและการขยาย (Distance & Expandability): UTP จำกัดที่ 100 เมตร (ต้องใช้ Repeater), Coaxial ได้มากกว่า 100 เมตรถึง >1 กม. ส่วน Fiber Optic เดินสายเดี่ยวได้ไกลหลายกิโลเมตรโดยไม่ต้องทวนสัญญาณ",
+                            "4. สภาพแวดล้อม (Environment): พื้นที่ที่มีคลื่นแม่เหล็กไฟฟ้าสูง (เช่น โรงงานอุตสาหกรรม) ควรใช้สาย STP หรือสายไฟเบอร์ออปติกทนความร้อน หลีกเลี่ยงระบบไร้สาย",
+                            "5. ความปลอดภัย (Security): สื่อกลางทั่วไปดักฟังสัญญาณได้ง่าย ยกเว้นสายไฟเบอร์ออปติก ส่วนระบบไร้สายคลื่นแพร่กระจายในอากาศจึงต้องเข้ารหัสข้อมูล (Encryption) ด้วยซอฟต์แวร์ก่อนส่ง"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 7,
+                code: "บทที่ 7",
+                title: "การตรวจจับข้อผิดพลาด การควบคุมการไหล และการควบคุมข้อผิดพลาด",
+                tags: ["L2"],
+                osiBadge: "เชื่อมโยง L2 (Data Link)",
+                badgeClass: "bg-indigo-100 text-indigo-800 border-indigo-200",
+                overview: "กลไกความน่าเชื่อถือของชั้น Data Link ชนิดของข้อผิดพลาด (Single-Bit และ Burst Error) วิธีตรวจจับข้อผิดพลาด (Parity Checks และ Checksum) การควบคุมการไหลของข้อมูล (Stop-and-Wait และ Sliding-Window) และการควบคุมข้อผิดพลาดด้วยเทคนิค ARQ (Stop-and-Wait, Go-Back-N และ Selective-Reject)",
+                sections: [
+                    {
+                        heading: " บทนำและชนิดของข้อผิดพลาด (Type of Errors)",
+                        items: [
+                            "บทบาทของชั้นสื่อสารดาต้าลิงค์ (Data Link Layer): ส่งข้อมูลในลักษณะ Node-to-Node โดยสร้างความน่าเชื่อถือให้ชั้น Physical ผ่าน 4 กลไก คือ 1) เพิ่มกลไกตรวจจับข้อผิดพลาด 2) ส่งเฟรมซ้ำเมื่อเฟรมเสียหาย 3) กำจัดเฟรมข้อมูลซ้ำซ้อน 4) จัดการกับเฟรมข้อมูลที่สูญหาย",
+                            "1. ข้อผิดพลาดแบบบิตเดียว (Single-Bit Error): มีเพียง 1 บิตเท่านั้นที่เปลี่ยนค่า (จาก 0 เป็น 1 หรือ 1 เป็น 0) เช่น ส่ง 00000010 แต่ได้รับ 00001010",
+                            "2. ข้อผิดพลาดแบบหลายบิต (Burst Error): มีจำนวนบิตตั้งแต่ 2 บิตขึ้นไปเกิดข้อผิดพลาด โดยความยาวของ Burst Error (Length of Burst Error) วัดจากบิตแรกที่ผิดพลาดไปจนถึงบิตสุดท้ายที่ผิดพลาด (เช่น ตัวอย่างในสไลด์มี Length of Burst Error = 8 บิต)"
+                        ]
+                    },
+                    {
+                        heading: " วิธีตรวจจับข้อผิดพลาด (Error Detection Methods)",
+                        items: [
+                            "1. การใช้บิตตรวจสอบ (Parity Checks): เพิ่มบิตพาริตี้ (0 หรือ 1) ปะท้ายข้อมูล 1 บิต แบ่งเป็น 2 วิธี คือ 1) Even Parity (ภาวะคู่: นับจำนวนบิต 1 รวมบิตพาริตี้ให้เป็นเลขคู่ เช่น ข้อมูล 0100110 มีเลข 1 สามตัว จึงเติม 1 เป็น 01001101) และ 2) Odd Parity (ภาวะคี่: รวมบิต 1 ให้เป็นเลขคี่) ข้อเสียคือ หากบิตเปลี่ยนค่าพร้อมกันเป็นจำนวนคู่ (เช่น ผิด 2 บิต) จะตรวจไม่พบข้อผิดพลาด",
+                            "2. การหาผลรวม (Checksum): มีประสิทธิภาพสูงกว่า Parity แต่มีโอเวอร์เฮดมากกว่า ฝั่งส่งนำค่าตัวเลขของข้อมูลมารวมกัน (เช่น คำว่า Networks แปลงเป็นเลขฐาน 16 ขนาด 16 บิต: 4E65 + 7477 + 6F72 + 6B73 = 19DC1) แล้วส่งผลรวมแนบไปให้ฝั่งรับตรวจสอบ ข้อเสียคือ หากข้อมูลหลายตัวเปลี่ยนค่าแล้วผลรวมบังเอิญเท่าเดิม (เรียกว่า Vertical Errors) จะตรวจไม่พบข้อผิดพลาด"
+                        ]
+                    },
+                    {
+                        heading: " การควบคุมการไหลของข้อมูล (Flow Control)",
+                        items: [
+                            "หลักการควบคุมการไหลของข้อมูล (Flow Control): ควบคุมปริมาณการส่งไม่ให้เร็วเกินกว่าที่บัฟเฟอร์ (Buffer) ของฝั่งรับจะรองรับได้ (เช่น คอมพิวเตอร์ส่งงานไปเครื่องพิมพ์) เพื่อป้องกันข้อมูลล้นบัฟเฟอร์และสูญหาย",
+                            "1. วิธีหยุดและรอ (Stop-and-Wait Flow Control): ฝั่งส่งส่งทีละ 1 เฟรม แล้วรอสัญญาณตอบรับ ACK จากฝั่งรับจึงจะส่งเฟรมถัดไป (หากฝั่งรับไม่พร้อมจะไม่ส่ง ACK กลับ) ข้อเสียคือล่าช้าหากระยะทางไกล ปรับปรุงได้โดยเพิ่มรหัส NAK เพื่อให้ฝั่งรับแจ้งขอข้อมูลใหม่ทันทีเมื่อพบข้อผิดพลาด",
+                            "2. วิธีเลื่อนหน้าต่าง (Sliding-Window Flow Control): ฝั่งส่งสามารถส่งข้อมูลได้หลายเฟรมต่อเนื่องก่อนรอรับ ACK โดยทั้งสองฝั่งมีกรอบหน้าต่าง (Window) ขนาดเท่ากัน เมื่อฝั่งส่งส่งเฟรมออกไปกรอบหน้าต่างจะหดลง และเมื่อฝั่งรับส่งสัญญาณตอบรับ (เช่น RR3 หมายถึงรับครบถึงเฟรม 2 แล้วและรอรับเฟรม 3) กรอบหน้าต่างจะเลื่อนและขยายขนาดกลับเท่าเดิม"
+                        ]
+                    },
+                    {
+                        heading: " การควบคุมข้อผิดพลาดและเทคนิค ARQ (Error Control)",
+                        items: [
+                            "การดำเนินการเมื่อฝั่งรับพบข้อผิดพลาด (3 กรณี): 1) ไม่ต้องดำเนินการใดๆ (Do nothing) ปล่อยให้ชั้นสื่อสารที่สูงกว่าจัดการ 2) แจ้งกลับไปให้ฝั่งส่งรับทราบ (Return a message) เพื่อขอให้ส่งใหม่ 3) ตรวจแก้ข้อผิดพลาดเองที่ฝั่งรับ (Correct the Error) ซึ่งเป็นวิธีที่ซับซ้อนที่สุด",
+                            "ชนิดของความผิดพลาดที่ตรวจพบ (2 ชนิด) และกลไกพื้นฐาน: แบ่งเป็น 1) เฟรมสูญหาย (Lost Frame: ส่งไม่ถึงปลายทาง) และ 2) เฟรมชำรุด (Damage Frame: ถึงปลายทางแต่บิตเพี้ยน) อาศัยกลไก 4 ส่วนคือ การตรวจจับข้อผิดพลาด, การตอบรับ ACK, การส่งซ้ำเมื่อหมดเวลา (Timeout) และการตอบรับ NAK",
+                            "การแก้ไขข้อผิดพลาดโดยส่งข้อมูลซ้ำอัตโนมัติ (Automatic Repeat Request : ARQ) — แบบที่ 1 Stop-and-Wait ARQ: ส่งทีละเฟรมและรอตอบรับ หากถูกต้องฝั่งรับส่ง ACK (ส่งเฟรมถัดไป) หากผิดพลาดฝั่งรับส่ง NAK หรือ REJ (ส่งเฟรมเดิมซ้ำ) ข้อดีคือเรียบง่ายไม่ซับซ้อน ข้อเสียคือเกิดความหน่วงเวลาสูง",
+                            "Continuous ARQ แบบที่ 2.1 Go-Back-N ARQ: ใช้ร่วมกับ Sliding Window ส่งเฟรมต่อเนื่องได้ทันที แต่หากมีเฟรมใดสูญหายหรือผิดพลาด (เช่น ส่งเฟรม 4, 5, 6, 7, 0 แล้วเฟรม 5 หาย ฝั่งรับจะส่ง REJ5 กลับ) ฝั่งส่งต้องย้อนกลับไปส่งใหม่ทั้งหมดตั้งแต่เฟรมที่ผิดพลาดเป็นต้นไป (ส่ง 5, 6, 7, 0 ใหม่ทั้งหมด)",
+                            "Continuous ARQ แบบที่ 2.2 Selective-Reject ARQ: มีประสิทธิภาพสูงสุด เมื่อเฟรมหมายเลข 5 สูญหาย ฝั่งรับจะส่งรหัส SREJ5 กลับไป และฝั่งส่งจะส่งซ้ำเฉพาะเฟรมหมายเลข 5 เพียงเฟรมเดียวเท่านั้น ส่วนเฟรมถัดไปส่งต่อจากลำดับที่ค้างไว้ได้ทันที (และหากเกิด Timeout ฝั่งส่งจะส่งรหัส RR เพื่อถามว่า What Do You Expect Next? เพื่อส่งเฉพาะเฟรมที่ตกหล่น)"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 8,
+                code: "บทที่ 8",
+                title: "เครือข่ายแลนไร้สาย (Wireless LANs - IEEE 802.11)",
+                tags: ["L1", "L2"],
+                osiBadge: "เชื่อมโยง L1–L2 (Physical & Data Link)",
+                badgeClass: "bg-indigo-100 text-indigo-800 border-indigo-200",
+                overview: "มาตรฐาน IEEE 802.11 และเทคนิค Spread Spectrum (DSSS vs FHSS) มาตรฐานย่อย 802.11 / 802.11b / 802.11a / 802.11g / 802.11n อุปกรณ์ฮาร์ดแวร์ โหมดการเชื่อมต่อ (Ad-Hoc และ Infrastructure) ระบบความปลอดภัย (SSID, MAC Filtering, WEP vs WPA) และปัจจัยที่ส่งผลต่อความเร็วและรัศมีสัญญาณ",
+                sections: [
+                    {
+                        heading: " พื้นฐานมาตรฐาน IEEE 802.11 และเทคนิคกระจายสเปกตรัม",
+                        items: [
+                            "ขอบเขตการทำงานบน OSI Model: มาตรฐาน IEEE 802.11 (WLAN) ครอบคลุมการทำงาน 2 ชั้นสื่อสาร คือ ชั้นฟิสิคัล (Physical) และชั้นดาต้าลิงค์ (Data Link) ใช้คลื่นวิทยุเป็นสื่อกลางแทนสายเคเบิล",
+                            "เทคนิคการกระจายสเปกตรัม (Spread Spectrum) 2 วิธี (ใช้งานร่วมกันไม่ได้): 1) DSSS (Direct-Sequence Spread-Spectrum) ส่งข้อมูลบนความถี่ต่างกันในเวลาเดียวกัน ใช้แบนด์วิดธ์มากกว่า ทรูพุตสูงกว่า แต่ถูกรบกวนง่ายกว่า 2) FHSS (Frequency-Hopping Spread-Spectrum) ส่งข้อมูลบนความถี่เดียวในเวลาหนึ่งแล้วกระโดดเปลี่ยนความถี่ ทนทานต่อการแทรกแซงได้ดีกว่า"
+                        ]
+                    },
+                    {
+                        heading: " มาตรฐานเครือข่ายแลนไร้สายตระกูล 802.11",
+                        items: [
+                            "1. มาตรฐาน 802.11 (ดั้งเดิม): ใช้ย่านความถี่ 2.4 GHz ความเร็วสูงสุดเพียง 2 Mbps ระยะทางประมาณ 150 ฟุต รองรับความปลอดภัย WEP และ WPA",
+                            "2. มาตรฐาน 802.11b: ใช้ย่านความถี่ 2.4 GHz ความเร็ว 11 Mbps ระยะครอบคลุมค่อนข้างไกล ทำให้ประหยัดจำนวนจุดติดตั้ง Access Point",
+                            "3. มาตรฐาน 802.11a: ใช้ย่านความถี่ 5 GHz ความเร็วสูงถึง 54 Mbps ข้อเสียคือติดข้อจำกัดทางกฎหมายคลื่น 5 GHz ในบางประเทศ และไม่สามารถใช้งานร่วมกับ 802.11b และ 802.11g ได้",
+                            "4. มาตรฐาน 802.11g: พัฒนาความเร็วสูงถึง 54 Mbps บนย่านความถี่ 2.4 GHz จึงสามารถใช้งานร่วมกับมาตรฐาน 802.11b ได้ทันที",
+                            "5. มาตรฐาน 802.11n: เพิ่มทรูพุตให้ความเร็วสูงถึง 100 Mbps ทำงานบนย่าน 5 GHz จึงเข้ากันได้กับมาตรฐาน 802.11a"
+                        ]
+                    },
+                    {
+                        heading: " อุปกรณ์ฮาร์ดแวร์และรูปแบบการเชื่อมต่อเครือข่ายไร้สาย",
+                        items: [
+                            "อุปกรณ์ฮาร์ดแวร์หลัก 2 ชนิด: 1) การ์ดเครือข่ายไร้สาย (Wireless NIC) เช่น การ์ดเสียบเมนบอร์ด, USB NIC หรือการ์ดที่ติดตั้งมาในโน้ตบุ๊ก 2) แอกเซสพอยด์ (Access Point : AP) ทำหน้าที่เป็นจุดรับส่งสัญญาณกลาง",
+                            "1. Ad-Hoc Mode (Peer-to-Peer): โหนดเชื่อมต่อถึงกันโดยตรงไม่ต้องผ่าน Access Point ประหยัด เหมาะกับเครือข่ายขนาดเล็กไม่เกิน 10 เครื่องเพื่อแชร์ทรัพยากร ไม่เน้นความปลอดภัยสูง",
+                            "2. Infrastructure Mode: เชื่อมต่อผ่าน Access Point (ติดตั้งได้มากกว่า 1 จุด) และเชื่อมต่อไปยังเครือข่ายแบบมีสาย (Wired LAN) ได้ เหมาะกับองค์กรที่มีเครื่องลูกข่ายจำนวนมาก ต้องการควบคุมจากศูนย์กลางและจัดการความปลอดภัยอย่างเป็นระบบ"
+                        ]
+                    },
+                    {
+                        heading: " ระบบความปลอดภัยบนเครือข่ายไร้สาย (Wireless Security)",
+                        items: [
+                            "1. ชื่อเครือข่าย (SSID - Service Set Identification): ขนาด 32 บิต บรรจุในเฮดเดอร์ของแพ็กเก็ต ลูกข่ายต้องตั้งชื่อ SSID ให้ตรงกับ AP จึงจะเชื่อมต่อได้ ควรเปลี่ยนชื่อและรหัสผ่านจากค่าเริ่มต้น (Default) ของโรงงาน",
+                            "2. การกลั่นกรองหมายเลขแมคแอดเดรส (MAC Address Filtering): กำหนดรายการ MAC Address ที่อนุญาตให้เข้าถึง AP ถือเป็นความปลอดภัยระดับต่ำเพราะแฮกเกอร์สามารถดักจับและปลอมแปลง (Spoof) MAC Address ได้ และข้อมูลอาจหายหากรีเซต AP",
+                            "3. การเข้ารหัสลับแบบ WEP (Wired Equivalency Privacy): เข้ารหัสขนาด 64 บิต และ 128 บิต ทำงานบนชั้น Physical และ Data Link เป็นแบบสเตติก (Static Encryption) ใช้คีย์เดียวกันทุกโหนด หากคีย์รั่วไหลจะถูกถอดรหัสได้ทันที",
+                            "4. การเข้ารหัสลับแบบ WPA (Wi-Fi Protected Access): พัฒนามาแก้ช่องโหว่ของ WEP เป็นการเข้ารหัสแบบไดนามิก (Dynamic Encryption) ที่ออกคีย์ให้ใหม่ต่อคนและต่อเซสชั่น (per-user and per-session) ทำให้ถอดรหัสได้ยากขึ้นมาก"
+                        ]
+                    },
+                    {
+                        heading: " ปัจจัยที่ส่งผลต่อความเร็วและขอบเขตรัศมีสัญญาณ",
+                        items: [
+                            "ปัจจัยด้านความเร็ว 3 ประการ: 1) มาตรฐานที่เลือกใช้ (เช่น 802.11b ได้ 11 Mbps, 802.11g ได้ 54 Mbps) 2) ระยะทางจาก AP หากอยู่ไกลเกินรัศมีสัญญาณความเร็วจะตกลง (อาจเหลือเพียง 1 Mbps หรือหลุดการเชื่อมต่อ) 3) สัญญาณรบกวนจากภายนอก เช่น เสาวิทยุ หรือเครื่องใช้ไฟฟ้าอย่างเครื่องปรับอากาศ",
+                            "ขอบเขตรัศมีและการขยายสัญญาณ: พื้นที่โล่งไร้สิ่งกีดขวางคลื่นจะส่งได้ไกลกว่าพื้นที่ที่มีตึกอาคารหรือผนังคอนกรีต สามารถขยายรัศมีครอบคลุมให้ไกลขึ้นได้โดยใช้อุปกรณ์บริดจ์ (Bridge) เชื่อมโยงเครือข่ายไร้สาย 2 เครือข่ายเข้าด้วยกัน"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 9,
+                code: "บทที่ 9",
+                title: "TCP/IP และอินเตอร์เน็ต (IPv4, Subnetting, CIDR, NAT & Protocols)",
+                tags: ["L3"],
+                osiBadge: "เชื่อมโยง L3 (Network)",
+                badgeClass: "bg-emerald-100 text-emerald-800 border-emerald-200",
+                overview: "บทบาทชั้น Network และโครงสร้าง IPv4 Datagram การจัดสรร IPv4 แบบ Classful (Class A–E) และ Classless (CIDR) การทำซับเน็ตและวิธีคำนวณ Subnetwork Address (Boundary และ Nonboundary-Level) Private IP, NAT 4 รูปแบบ และโปรโตคอล ARP, RARP, ICMP",
+                sections: [
+                    {
+                        heading: " ชั้นสื่อสารเน็ตเวิร์กและโปรโตคอล IP (IPv4 Datagram)",
+                        items: [
+                            "หน้าที่ของชั้น Network: ส่งมอบข้อมูลแบบ Host-to-Host และหาเส้นทาง (Routing) ผ่านเร้าเตอร์ มีโปรโตคอลหลักคือ IP และโปรโตคอลสนับสนุนคือ ARP, RARP, ICMP และ IGMP",
+                            "ลักษณะการทำงานของ IP: เป็นแบบ Connectionless และ Best-Effort (ไม่รับประกันว่าข้อมูลจะถึงปลายทาง เปรียบเสมือนจดหมายธรรมดา หากต้องการความน่าเชื่อถือต้องทำงานคู่กับ TCP ที่เปรียบเสมือนจดหมายลงทะเบียน)",
+                            "โครงสร้าง IPv4 Datagram: แบ่งเป็น Header (ขนาด 20–60 ไบต์) และส่วนข้อมูล (Data) โดยมีฟิลด์สำคัญใน Header ได้แก่ 1) Version (4 บิต, IPv4) 2) Total Length (16 บิต/2 ไบต์ ระบุความยาวรวมของดาต้าแกรม) 3) Time to Live : TTL (กำหนดอายุแพ็กเก็ต เช่น 32 หรือ 64 เมื่อผ่านเร้าเตอร์แต่ละตัวจะถูกลดค่าลงทีละ 1 หากเหลือ 0 จะถูกทิ้ง) 4) Protocol (ระบุโปรโตคอลชั้นบน เช่น TCP, UDP, ICMP, IGMP) 5) Header Checksum (16 บิต ตรวจสอบเฉพาะส่วน Header) 6) Source Address และ Destination Address"
+                        ]
+                    },
+                    {
+                        heading: " การจัดสรร IPv4 แบบใช้คลาส (Classful Addressing A–E)",
+                        items: [
+                            "โครงสร้าง IPv4: ขนาด 32 บิต (4 ไบต์ / 4 ออคเทต) แบ่งเป็น NetID (ระบุเครือข่าย) และ HostID (ระบุอุปกรณ์) สูตรคำนวณ: จำนวนเครือข่าย = 2^(NetID) - 2 และจำนวนโฮสต์ต่อเครือข่าย = 2^(HostID) - 2",
+                            "คลาส A (1–126): บิตแรกคงที่คือ 0 | NetID = 7 บิต (ได้ 2^7 - 2 = 126 เครือข่าย; สงวน 0 และ 127) | HostID = 24 บิต (ได้ 2^24 - 2 โฮสต์) | Default Mask: 255.0.0.0 (/8)",
+                            "คลาส B (128–191): 2 บิตแรกคงที่คือ 10 | NetID = 14 บิต (ได้ 2^14 - 2 เครือข่าย) | HostID = 16 บิต (ได้ 2^16 - 2 โฮสต์) | Default Mask: 255.255.0.0 (/16)",
+                            "คลาส C (192–223): 3 บิตแรกคงที่คือ 110 | NetID = 21 บิต (ได้ 2^21 - 2 เครือข่าย) | HostID = 8 บิต (ได้ 2^8 - 2 = 254 โฮสต์) | Default Mask: 255.255.255.0 (/24)",
+                            "คลาส D และ E: คลาส D (224–239, 4 บิตแรกคือ 1110) สงวนไว้สำหรับ Multicast Address | คลาส E (240–255, 4 บิตแรกคือ 1111) สงวนไว้ใช้งานในอนาคต"
+                        ]
+                    },
+                    {
+                        heading: " การทำซับเน็ต (Subnetting) และ Classless Addressing (CIDR)",
+                        items: [
+                            "หลักการทำซับเน็ต (3 ระดับ): ยืมบิตบางส่วนจาก HostID มาสร้างเป็น SubNetID ทำให้เกิดโครงสร้าง NetID -> SubNetID -> HostID (ขั้นตอนส่งคือ Delivery to Site -> Delivery to Subnetwork -> Delivery to Host)",
+                            "วิธีคำนวณหา Subnetwork Address (2 แบบ): 1) Boundary-Level Masking (ใช้ Default Mask ค่าเป็น 0 หรือ 255 เช่น 45.23.21.8 Mask 255.255.0.0 ได้ 45.23.0.0) และ 2) Nonboundary-Level Masking (Custom Mask นำออคเทตที่ไม่ใช่ 0/255 มาทำ Bitwise AND กับ IP เช่น 213.23.47.37 Mask 255.255.255.240 นำ 37 [00100101] AND 240 [11110000] = 32 ได้ซับเน็ต 213.23.47.32)",
+                            "การจัดสรรแบบไร้คลาส CIDR (Classless Inter-Domain Routing): ใช้สัญลักษณ์ / (Slash) ตามด้วยจำนวนบิตของ Mask เช่น /16, /28 เพื่อจัดสรร IP ตามจำนวนโฮสต์จริง ลดการสูญเสีย IP (เช่น แบ่ง IP 128.211.0.16/28 ให้ลูกค้าที่ต้องการ 12 โฮสต์)",
+                            "ตัวอย่างโจทย์คำนวณ CIDR ในสไลด์: ตัวอย่างที่ 1: IP 165.100.0.0 (Class B) ต้องการ 1,000 ซับเน็ต และ 60 โฮสต์/ซับเน็ต -> ยืม 10 บิต ได้ Custom Mask 255.255.255.192 (Usable Subnets = 2^10 - 2 = 1,022, Usable Hosts = 2^6 - 2 = 62) | ตัวอย่างที่ 2: IP 192.10.10.0 (Class C) ต้องการ 14 ซับเน็ต และ 10 โฮสต์/ซับเน็ต -> ยืม 4 บิต ได้ Custom Mask 255.255.255.240 (Usable Subnets = 2^4 - 2 = 14, Usable Hosts = 2^4 - 2 = 14)"
+                        ]
+                    },
+                    {
+                        heading: " เครือข่ายไอพีภายใน (Private IP) และ NAT (4 รูปแบบ)",
+                        items: [
+                            "Private IP Network และ Loopback: ช่วง IP สงวนใช้ภายในองค์กร ออกอินเทอร์เน็ตโดยตรงไม่ได้ ได้แก่ Class A: 10.0.0.0 – 10.255.255.255, Class B: 172.16.0.0 – 172.31.255.255, Class C: 192.168.0.0 – 192.168.255.255 ส่วน 127.0.0.1 คือ Loopback Address สำหรับทดสอบเครื่องตนเอง",
+                            "1. Static NAT: จับคู่ Private IP กับ Public IP แบบ 1-ต่อ-1 ตายตัว ไม่ช่วยประหยัด IP จริง และภายนอกสามารถเข้าถึงเครื่องภายในได้",
+                            "2. Dynamic NAT: แปลง Private IP เป็น Public IP แบบหมุนเวียนไม่ตายตัวจากกลุ่ม IP จริงที่มีอยู่ (Pool) ช่วยซ่อนตัวตนเครื่องภายใน แต่ยังไม่ประหยัดจำนวน IP จริง",
+                            "3. NAT Overloading (PAT): แปลง Private IP หลายเครื่องให้ออกอินเทอร์เน็ตด้วย Public IP จริงเพียงหมายเลขเดียว โดยแยกแยะด้วยหมายเลข Port ที่ต่างกัน (เช่น 213.18.123.100:101 และ :102) ช่วยประหยัด IP จริงได้มากที่สุด",
+                            "4. Overlapping NAT: ใช้แก้ปัญหาเมื่อเครือข่ายภายในใช้หมายเลข IP จริงที่ไปซ้ำกับเครือข่ายอื่นหรือเปลี่ยน ISP ใหม่ โดยแปลง IP เดิมให้เป็น IP จริงชุดใหม่ที่จดทะเบียนไว้โดยไม่ต้องตั้งค่าเครื่องลูกข่ายใหม่ทั้งหมด"
+                        ]
+                    },
+                    {
+                        heading: " โปรโตคอลสนับสนุนในชั้นเน็ตเวิร์ก (ARP, RARP, ICMP)",
+                        items: [
+                            "ARP (Address Resolution Protocol): แปลง IP Address เป็น MAC Address โดยตรวจสอบจาก ARP Cache ก่อน หากไม่พบจะส่ง ARP Request แบบ Broadcast ไปทั้งเครือข่าย เครื่องที่มี IP ตรงกันจะตอบกลับด้วย ARP Response พร้อมแจ้ง MAC Address แล้วบันทึกลง ARP Cache",
+                            "RARP (Reverse Address Resolution Protocol): ทำงานตรงข้ามกับ ARP โดยแปลง MAC Address ให้กลับมาเป็น IP Address",
+                            "ICMP (Internet Control Message Protocol): กลไกที่เร้าเตอร์และโหนดใช้แจ้งรายงานข้อผิดพลาดกลับไปยังต้นทางเมื่อส่งดาต้าแกรมไม่สำเร็จ เมสเสจที่พบบ่อย ได้แก่ Type 0 (Echo Reply), Type 3 (Destination Unreachable) และ Type 8 (Echo Request)"
+                        ]
+                    }
+                ]
+            },
+          {
+                id: 10,
+                code: "บทที่ 10",
+                title: "โปรโตคอลบนชั้นสื่อสารทรานสปอร์ต และแอปพลิเคชั่น",
+                tags: ["L4", "L7"],
+                osiBadge: "เชื่อมโยง L4 & L7 (Transport & Application)",
+                badgeClass: "bg-rose-100 text-rose-800 border-rose-200",
+                overview: " การส่งมอบข้อมูลแบบ Process-to-Process และหมายเลขพอร์ต (Port) โปรโตคอลในชั้น Transport (UDP, TCP และ SCTP) รวมถึงโปรโตคอลและองค์ประกอบสำคัญในชั้น Application (DHCP, DNS, Telnet, FTP, SMTP, POP, HTTP, URL, WWW และ HTML)",
+                sections: [
+                    {
+                        heading: " การส่งมอบข้อมูลแบบ Process-to-Process และหมายเลขพอร์ต (Port)",
+                        items: [
+                            "การสื่อสารแบบ Process-to-Process: ชั้นสื่อสารทรานสปอร์ต (Transport Layer) ทำหน้าที่ส่งมอบแพ็กเก็ตข้อมูลจากโปรเซส (โปรแกรมแอปพลิเคชั่น) หนึ่งไปยังอีกโปรเซสหนึ่ง ภายใต้ความสัมพันธ์แบบไคลเอนต์/เซิร์ฟเวอร์ (Client/Server) โดยโปรเซสบนโลคัลโฮสต์ที่ร้องขอบริการเรียกว่า ไคลเอนต์ (Client) และโปรเซสบนรีโมตโฮสต์ที่ให้บริการเรียกว่า เซิร์ฟเวอร์ (Server)",
+                            "การกำหนดตำแหน่งที่อยู่ด้วยพอร์ต (Port): โปรโตคอลในชุด TCP/IP ใช้หมายเลขพอร์ตเป็นหมายเลขกำกับช่องสื่อสารเพื่อระบุจุดเชื่อมต่อของแต่ละโปรเซส ตัวอย่างหมายเลขพอร์ตมาตรฐานในสไลด์ ได้แก่ พอร์ต 20, 21 (FTP), พอร์ต 23 (TELNET), พอร์ต 25 (SMTP) และพอร์ต 80 (HTTP)"
+                        ]
+                    },
+                    {
+                        heading: " โปรโตคอลบนชั้นสื่อสารทรานสปอร์ต (UDP, TCP และ SCTP)",
+                        items: [
+                            "1. UDP (User Datagram Protocol): ให้บริการแบบคอนเน็กชั่นเลส (Connectionless) ไม่สร้างการเชื่อมต่อกับปลายทางก่อนส่ง ส่งข้อมูลออกทันทีและไม่รับประกันว่าข้อมูลจะถึงปลายทางหรือไม่ จึงเป็นโปรโตคอลที่มีความน่าเชื่อถือต่ำ",
+                            "2. TCP (Transmission Control Protocol): ให้บริการแบบคอนเน็กชั่นโอเรียนเต็ด (Connection-Oriented) ต้องสร้างการเชื่อมต่อกับปลายทางก่อนจึงจะส่งข้อมูล มีกลไกตรวจสอบความถูกต้องครบถ้วน จึงเป็นโปรโตคอลที่มีความน่าเชื่อถือสูง",
+                            "3. SCTP (Stream Control Transmission Protocol): ให้บริการแบบคอนเน็กชั่นโอเรียนเต็ด โดยทำการแบ่งข้อมูลออกเป็นหลายๆ ชุดเรียกว่า Chunk และส่งแยกกันในแต่ละ Chunk เหมาะสำหรับระบบงานแบบเรียลไทม์ โดยเฉพาะระบบออดิโอและวิดีโอ"
+                        ]
+                    },
+                    {
+                        heading: " โปรโตคอลบนชั้นสื่อสารแอปพลิเคชั่น (การจัดการเครือข่ายและเข้าถึงระยะไกล)",
+                        items: [
+                            "1. DHCP (Dynamic Host Configuration Protocol): ทำหน้าที่กำหนดหรือจัดสรรหมายเลข IP Address, Subnet Mask และ Default Gateway ให้แก่โฮสต์บนเครือข่ายแบบอัตโนมัติ (ไดนามิก) ทำให้โฮสต์ได้รับหมายเลข IP แบบไม่ตายตัว",
+                            "2. DNS (Domain Name System): ระบบการตั้งชื่อบนอินเทอร์เน็ตที่ประกอบด้วยลำดับชื่อคั่นด้วยจุด (เช่น www.aru.ac.th) โดยทำหน้าที่แปลงชื่อโดเมนให้เป็นหมายเลข IP Address",
+                            "3. Telnet (Telecommunication Network): โปรโตคอลที่ใช้สำหรับล็อกอินเพื่อเชื่อมต่อและควบคุมเครื่องศูนย์กลางหรือเซิร์ฟเวอร์ผ่านเครือข่ายแบบระยะไกล (Remote Login)",
+                            "4. FTP (File Transfer Protocol): โปรโตคอลที่ให้บริการโอนถ่ายแฟ้มข้อมูล (อัปโหลด/ดาวน์โหลดไฟล์) ระหว่างโฮสต์ ด้วยการสร้างคอนเน็กชั่นติดต่อกันระหว่างเครื่องไคลเอนต์กับเซิร์ฟเวอร์"
+                        ]
+                    },
+                    {
+                        heading: " โปรโตคอลบนชั้นสื่อสารแอปพลิเคชั่น (ระบบอีเมลและเวิลด์ไวด์เว็บ)",
+                        items: [
+                            "5. SMTP (Simple Mail Transfer Protocol): โปรโตคอลที่สนับสนุนระบบไปรษณีย์อิเล็กทรอนิกส์ (อีเมล) บนอินเทอร์เน็ต ทำหน้าที่หลักในการส่งข้อความอีเมลระหว่างเครื่องด้วยอีเมลแอดเดรส",
+                            "6. POP (Post Office Protocol): โปรโตคอลที่อนุญาตให้ไคลเอนต์ติดต่อและล็อกอินเข้าสู่เมลเซิร์ฟเวอร์เพื่อจัดการเมลบ็อกซ์ เช่น การดาวน์โหลดอีเมลจากเซิร์ฟเวอร์มาเก็บไว้ที่เครื่องของตนเอง",
+                            "7. HTTP (Hypertext Transfer Protocol) และ URL (Uniform Resource Locator): HTTP เป็นตัวกลางรับส่งข้อมูลเว็บระหว่างเว็บเบราว์เซอร์กับเว็บเซิร์ฟเวอร์ ส่วน URL คือกลุ่มข้อความที่ใช้ระบุตำแหน่งที่อยู่ของเอกสารหรือเว็บเพจบนเว็บให้จดจำง่ายแทนตัวเลข IP",
+                            "8. WWW (World Wide Web) และ HTML (HyperText Markup Language): WWW คือระบบไฮเปอร์มีเดียบนอินเทอร์เน็ตที่รวมข้อความ รูปภาพ เสียง วิดีโอ และไฮเปอร์ลิงก์ ส่วน HTML คือภาษาคอมพิวเตอร์ที่ใช้กำหนดเนื้อหาและจัดวางรูปแบบเว็บเพจด้วยรหัสแท็ก (Tag) เพื่อให้เบราว์เซอร์แปลผลออกทางหน้าจอ"
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 11,
+                code: "บทที่ 11",
+                title: "ความปลอดภัยบนเครือข่าย (Network Security)",
+                tags: ["overview","L3", "L7"],
+                osiBadge: "เชื่อมโยง L3 & L7 (Network & Application Security)",
+                badgeClass: "bg-slate-100 text-slate-800 border-slate-300",
+                overview: "มาตรการความปลอดภัยขั้นพื้นฐานและความปลอดภัยด้านสภาพแวดล้อมภายนอก ความปลอดภัยด้านการปฏิบัติงานและการเฝ้าระวัง การแสดงตัวตน (Password & Biometric) การตรวจสอบ Log File และกำหนดสิทธิ์ รูปแบบการโจมตีระบบ (Hacking, DoS, Malware) และเทคโนโลยีไฟร์วอลล์ (Packet Filter และ Proxy Server)",
+                sections: [
+                    {
+                        heading: " ความปลอดภัยขั้นพื้นฐานและสภาพแวดล้อมภายนอก (Physical Security)",
+                        items: [
+                            "มาตรการความปลอดภัยขั้นพื้นฐาน: อินเทอร์เน็ตเป็นเครือข่ายสาธารณะที่เสี่ยงต่อแฮกเกอร์ (ผู้ที่มุ่งขัดขวาง ทำลายระบบ หรือขโมยความลับ) จึงต้องมีมาตรการพื้นฐาน เช่น ติดตั้งโปรแกรมป้องกันไวรัส และการล็อกเครื่องคอมพิวเตอร์เมื่อไม่ใช้งาน[cite: 435]",
+                            "ความปลอดภัยทางกายภาพและอุปกรณ์: 1) ปิดและล็อกประตูห้องศูนย์บริการคอมพิวเตอร์เสมอ 2) จัดวางสายเคเบิลให้มิดชิดเรียบร้อยเพื่อป้องกันอุบัติเหตุและสายขาด 3) ยึดอุปกรณ์ให้อยู่กับที่เพื่อป้องกันการเคลื่อนย้ายหรือโจรกรรม[cite: 436]",
+                            "การควบคุมสภาพแวดล้อมและภัยธรรมชาติ: 1) ปรับเครื่องปรับอากาศให้เย็นพอเหมาะเพื่อยืดอายุอุปกรณ์อิเล็กทรอนิกส์ 2) ติดตั้งระบบป้องกันทางไฟฟ้า/กรองสัญญาณไฟเพื่อป้องกันไฟตกและไฟกระชาก 3) ป้องกันภัยธรรมชาติ (แผ่นดินไหว อุทกภัย อัคคีภัย) ด้วยการออกแบบระบบสำรองข้อมูลแบบสมบูรณ์ (Full Backup) ในสถานที่ปลอดภัย[cite: 439]"
+                        ]
+                    },
+                    {
+                        heading: " ความปลอดภัยด้านการปฏิบัติงาน การแสดงตัวตน และการตรวจสอบระบบ",
+                        items: [
+                            "ความปลอดภัยด้านการปฏิบัติงาน (นโยบายระดับการเข้าถึง): กำหนดสิทธิ์ตามหน้าที่ของแต่ละฝ่าย เช่น ฝ่ายขายเข้าถึงข้อมูลเงินเดือนไม่ได้ พนักงานฝ่ายเงินเดือนดูได้แต่แก้ไขไม่ได้ และผู้จัดการฝ่ายการเงินเรียกดูข้อมูลฝ่ายอื่นได้แต่แก้ไขไม่ได้[cite: 440]",
+                            "การตรวจตราเฝ้าระวัง (Surveillance): ติดตั้งกล้องวงจรปิด (CCTV) ตามจุดสำคัญและระบบแจ้งเตือนเหตุฉุกเฉินไปยังมือถือ/เพจเจอร์ โดยต้องคำนึงถึงความเหมาะสมและกฎหมายด้านสิทธิ์ส่วนบุคคล[cite: 441]",
+                            "การใช้รหัสผ่านและระบบแสดงตัวตน (Authentication): กำหนดนโยบายรหัสผ่านให้คาดเดายากและบังคับเปลี่ยนตามอายุการใช้งาน สำหรับหน่วยงานที่ต้องการความปลอดภัยสูงจะใช้ระบบไบโอเมตริก (Biometric) อาศัยลักษณะทางกายภาพเฉพาะบุคคล เช่น เครื่องสแกนลายนิ้วมือ และเครื่องสแกนเลนส์ม่านตา[cite: 442, 444]",
+                            "การตรวจสอบ (Auditing) และการกำหนดสิทธิ์ (Permissions): บันทึกทุกทรานแซกชั่นที่เข้ามาในระบบลงใน Log File (ระบุวันที่และผู้ใช้งาน) เพื่อตรวจสอบพฤติกรรมย้อนหลัง และกำหนดสิทธิ์เข้าถึงทรัพยากรตามหลัก 2 ปัจจัย คือ ใคร (Who) และ อย่างไร (How เช่น อ่านได้อย่างเดียว เขียน/บันทึก หรือสั่งพิมพ์)[cite: 445, 446]",
+                            "การป้องกันไวรัสคอมพิวเตอร์: ติดตั้งโปรแกรมป้องกันไวรัส (Antivirus) และอัปเดตฐานข้อมูลผ่านอินเทอร์เน็ตอย่างสม่ำเสมอเพื่อให้ตรวจจับไวรัสสายพันธุ์ใหม่ได้ทันท่วงที[cite: 448]"
+                        ]
+                    },
+                    {
+                        heading: " รูปแบบการโจมตีระบบเครือข่าย (3 ประเภทหลัก)",
+                        items: [
+                            "1. การโจมตีเพื่อเจาะระบบ (Hacking Attacks): มุ่งโจมตีเป้าหมายที่ระบุไว้อย่างชัดเจนเพื่อเจาะเข้าสู่เครือข่ายภายใน ขโมยความลับ คัดลอก เปลี่ยนแปลง หรือทำลายข้อมูล รวมถึงติดตั้งโปรแกรมไม่พึงประสงค์[cite: 451]",
+                            "2. การโจมตีเพื่อปฏิเสธการให้บริการ (Denial of Service Attacks : DoS): มุ่งโจมตีให้เครื่องเซิร์ฟเวอร์หรือเครือข่ายหยุดตอบสนองและไม่สามารถให้บริการแก่ไคลเอนต์ได้ เช่น การส่งเมลบอมบ์ (Mail Bomb) การยิงแพ็กเก็ตจำนวนมาก หรือการแพร่หนอนไวรัส[cite: 452]",
+                            "3. การโจมตีแบบไม่ระบุเป้าหมาย (Malware Attacks): การแพร่กระจายโปรแกรมประสงค์ร้ายแบบหว่านไปทั่วเครือข่ายโดยไม่เจาะจง เช่น หนอนไวรัส (Worm), โทรจัน (Trojan), สปายแวร์ (Spyware) และแอดแวร์ (Adware) ผ่านทางอีเมลหรือไฟล์แนบ[cite: 453]"
+                        ]
+                    },
+                    {
+                        heading: " ไฟร์วอลล์ (Firewall) และเทคโนโลยีการคัดกรอง",
+                        items: [
+                            "หลักการทำงานของไฟร์วอลล์: ทำหน้าที่เสมือนด่านตรวจคัดกรองแพ็กเก็ตที่เข้า-ออกระหว่างเครือข่ายภายในกับอินเทอร์เน็ต (เป็นได้ทั้งเร้าเตอร์ เกตเวย์ หรือซอฟต์แวร์) เพื่อป้องกันผู้บุกรุกจากภายนอกและจำกัดการเข้าถึงเว็บไซต์ที่ไม่พึงประสงค์จากภายใน[cite: 455]",
+                            "1. แพ็กเก็ตฟิลเตอร์ (Packet Filter): ทำงานในชั้นสื่อสารเน็ตเวิร์ก (เช่น เร้าเตอร์) กลั่นกรองแพ็กเก็ตจากหมายเลข IP และหมายเลขพอร์ต TCP ที่อนุญาต ทำงานง่ายและรวดเร็ว แต่มีจุดอ่อนคือผู้บุกรุกอาจปลอมแปลงหมายเลข IP (IP Spoofing) เพื่อหลอกผ่านเข้ามาได้[cite: 457, 458]",
+                            "2. พร็อกซีเซิร์ฟเวอร์ (Proxy Server): ทำงานในชั้นสื่อสารแอปพลิเคชั่น ทำหน้าที่เสมือนนายประตูคอยรับ-ส่งทรานแซกชั่นแทนเครื่องภายในทั้งหมด พร้อมบันทึกข้อมูลลง Log File ให้ตรวจสอบย้อนหลัง มีความปลอดภัยและซับซ้อนกว่าแบบแรก แต่ทำงานช้ากว่า[cite: 459]"
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // State
+        let activeLayer = 7;
+        let activeFilter = 'all';
+
+        // Render OSI 7 Layers Left Stack
+        function renderOsiList() {
+            const container = document.getElementById('osi-stack-list');
+            if (!container) return;
+            container.innerHTML = osiLayers.map(item => `
+                <button onclick="selectOsiLayer(${item.layer})" id="osi-item-${item.layer}"
+                    class="w-full text-left p-3.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 transition-all duration-200 flex items-center justify-between group">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-lg ${item.iconBg} text-white font-heading font-bold text-sm flex items-center justify-center shadow-sm shrink-0">
+                            L${item.layer}
+                        </span>
+                        <div>
+                            <div class="font-heading font-bold text-sm text-slate-900 group-hover:text-sky-700 transition">
+                                ${item.name}
+                            </div>
+                            <div class="text-xs text-slate-500">${item.thaiName}</div>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-md text-xs font-mono font-medium bg-slate-100 text-slate-700 border border-slate-200 shrink-0">
+                        ${item.pdu.split(' ')[0]}
+                    </span>
+                </button>
+            `).join('');
+        }
+
+        // Select and Display OSI Layer Details
+        function selectOsiLayer(layerNum) {
+            activeLayer = layerNum;
+            osiLayers.forEach(item => {
+                const el = document.getElementById(`osi-item-${item.layer}`);
+                if (!el) return;
+                if (item.layer === layerNum) {
+                    el.classList.add('osi-btn-active');
+                } else {
+                    el.classList.remove('osi-btn-active');
+                }
+            });
+
+            const data = osiLayers.find(l => l.layer === layerNum);
+            const card = document.getElementById('osi-detail-card');
+            if (!data || !card) return;
+
+            card.innerHTML = `
+                <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-200">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-2xl ${data.iconBg} text-white font-heading font-bold text-lg flex items-center justify-center shadow-sm">
+                            L${data.layer}
+                        </div>
+                        <div>
+                            <h3 class="text-lg sm:text-xl font-bold text-slate-900">${data.name}</h3>
+                            <p class="text-sm font-medium text-sky-700">${data.thaiName}</p>
+                        </div>
+                    </div>
+                    <div class="text-left sm:text-right">
+                        <span class="text-xs text-slate-500 block">หน่วยข้อมูล (PDU)</span>
+                        <span class="inline-block mt-0.5 px-3 py-1 rounded-lg text-xs font-mono font-semibold border ${data.badgeBg}">
+                            ${data.pdu}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="mt-4 space-y-5">
+                    <div>
+                        <h4 class="text-xs font-heading font-semibold uppercase tracking-wider text-slate-400 mb-1.5">แนวคิดและบทบาทหลัก</h4>
+                        <p class="text-sm text-slate-700 leading-relaxed bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
+                            ${data.summary}
+                        </p>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-heading font-semibold uppercase tracking-wider text-slate-400 mb-2">หน้าที่หลัก (Functions)</h4>
+                        <ul class="space-y-2">
+                            ${data.functions.map(fn => `
+                                <li class="flex items-start gap-2.5 text-sm text-slate-700">
+                                    <i class="fa-solid fa-circle-check text-sky-600 mt-1 text-xs shrink-0"></i>
+                                    <span>${fn}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
+                            <h4 class="text-xs font-heading font-semibold text-slate-600 mb-2">
+                                <i class="fa-solid fa-code-branch text-indigo-600 mr-1"></i> โปรโตคอล / มาตรฐานที่เกี่ยวข้อง
+                            </h4>
+                            <div class="flex flex-wrap gap-1.5">
+                                ${data.protocols.map(p => `<span class="px-2 py-0.5 rounded bg-white border border-slate-200 text-xs font-mono text-indigo-700">${p}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
+                            <h4 class="text-xs font-heading font-semibold text-slate-600 mb-2">
+                                <i class="fa-solid fa-server text-emerald-600 mr-1"></i> อุปกรณ์เครือข่าย
+                            </h4>
+                            <div class="flex flex-wrap gap-1.5">
+                                ${data.devices.map(d => `<span class="px-2 py-0.5 rounded bg-white border border-slate-200 text-xs text-emerald-800">${d}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                   
+                </div>
+            `;
+        }
+
+        // Jump smoothly to specific chapter card
+        function jumpToChapter(chapterId) {
+            activeFilter = 'all';
+            const searchInput = document.getElementById('chapter-search');
+            if (searchInput) searchInput.value = '';
+            document.querySelectorAll('.filter-btn').forEach((btn, idx) => {
+                if (idx === 0) {
+                    btn.className = 'filter-btn px-3 py-1.5 rounded-lg text-xs font-heading font-semibold bg-sky-600 text-white shadow-sm transition';
+                } else {
+                    btn.className = 'filter-btn px-3 py-1.5 rounded-lg text-xs font-heading font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition';
+                }
+            });
+            renderChapters();
+
+            setTimeout(() => {
+                const target = document.getElementById(`chapter-card-${chapterId}`);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    target.classList.remove('highlight-pulse');
+                    void target.offsetWidth;
+                    target.classList.add('highlight-pulse');
+                }
+            }, 50);
+        }
+
+        // Filter Chapters by OSI Layer Tag
+        function setFilter(filterTag, btnElement) {
+            activeFilter = filterTag;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.className = 'filter-btn px-3 py-1.5 rounded-lg text-xs font-heading font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition';
+            });
+            if (btnElement) {
+                btnElement.className = 'filter-btn px-3 py-1.5 rounded-lg text-xs font-heading font-semibold bg-sky-600 text-white shadow-sm transition';
+            }
+            renderChapters();
+        }
+
+        // Render Chapters Repository
+        function renderChapters() {
+            const searchInput = document.getElementById('chapter-search');
+            const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            const container = document.getElementById('chapters-container');
+            if (!container) return;
+
+            const filtered = chaptersData.filter(ch => {
+                const matchTag = activeFilter === 'all' || ch.tags.includes(activeFilter);
+                const matchSearch = !query ||
+                    ch.code.toLowerCase().includes(query) ||
+                    ch.title.toLowerCase().includes(query) ||
+                    ch.overview.toLowerCase().includes(query) ||
+                    ch.sections.some(sec =>
+                        sec.heading.toLowerCase().includes(query) ||
+                        sec.items.some(it => it.toLowerCase().includes(query))
+                    );
+                return matchTag && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white border border-slate-200 rounded-2xl p-10 text-center">
+                        <i class="fa-solid fa-magnifying-glass text-3xl text-slate-300 mb-3"></i>
+                        <p class="text-slate-600 font-heading font-medium">ไม่พบเนื้อหาที่ตรงกับคำค้นหา "${query}"</p>
+                        <p class="text-xs text-slate-400 mt-1">ลองค้นหาด้วยคำสำคัญอื่น เช่น OSI, TCP, IPv4, ARQ, Fiber Optic</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(ch => `
+                <article id="chapter-card-${ch.id}" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm transition-all">
+                    <!-- Chapter Header -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
+                        <div class="flex items-center gap-2.5">
+                            <span class="px-3 py-1 rounded-lg bg-slate-900 text-white font-heading font-bold text-xs">
+                                ${ch.code}
+                            </span>
+                            <h3 class="text-base sm:text-lg font-bold text-slate-900">${ch.title}</h3>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-heading font-semibold border ${ch.badgeClass}">
+                            <i class="fa-solid fa-layer-group mr-1"></i>${ch.osiBadge}
+                        </span>
+                    </div>
+
+                    <!-- Chapter Overview -->
+                    <p class="text-sm text-slate-600 mt-3 leading-relaxed">
+                        ${ch.overview}
+                    </p>
+
+                    <!-- Structured Subsections -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        ${ch.sections.map(sec => `
+                            <div class="bg-slate-50/90 border border-slate-200/80 rounded-xl p-4">
+                                <h4 class="text-xs sm:text-sm font-heading font-bold text-slate-800 mb-2.5 pb-1.5 border-b border-slate-200/70 flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-sky-600 shrink-0"></span>
+                                    <span>${sec.heading}</span>
+                                </h4>
+                                <ul class="space-y-2">
+                                    ${sec.items.map(item => {
+                                        const colonIdx = item.indexOf(':');
+                                        if (colonIdx > -1 && colonIdx < 80) {
+                                            const prefix = item.substring(0, colonIdx + 1);
+                                            const rest = item.substring(colonIdx + 1);
+                                            return `<li class="text-xs sm:text-sm text-slate-700 leading-relaxed"><strong class="text-slate-900 font-semibold">${prefix}</strong>${rest}</li>`;
+                                        }
+                                        return `<li class="text-xs sm:text-sm text-slate-700 leading-relaxed">• ${item}</li>`;
+                                    }).join('')}
+                                </ul>
+                            </div>
+                        `).join('')}
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        // Initialize immediately when DOM is ready
+        function initApp() {
+            renderOsiList();
+            selectOsiLayer(7);
+            renderChapters();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+    </script>
+</body>
+</html>
